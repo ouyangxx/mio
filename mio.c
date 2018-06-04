@@ -1,0 +1,587 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include "mio.h"
+#include "config.h"
+#include "tlv.h"
+#include "file.h"
+#include "threadpoll.h"
+#include "pthread.h"
+#ifdef WIN32
+#include <windows.h>
+#include <winsock.h> 
+#else
+#include <unistd.h>
+#include <arpa/inet.h>¡¡
+#endif
+
+#define DEFAULT_UNZIP_NUM	(10)
+#define MAX_THREAD_NUM	(10)
+#define MAX_TASK_SIZE	(20)
+#define COM_MULTI_FILE_APPEND_VIRTUAL	(4)
+#define SFILE_TAG_NUM_MAX		(3)
+#define TLV_PAD(n) (((n) % 4) ? ((n) + (4 - ((n) % 4))) : (n))
+#define FILE_MODE_DEFAULT   (00400 | 00200 | 00100 | 00040 | 00004) //0744
+
+struct mfile_session
+{
+	uint32_t file_type;
+	uint32_t sfile_num;
+	struct sfile *sfile_array;
+
+	uint8_t *head_buf;
+	uint64_t head_size;
+
+	uint32_t op;//0,read 1,write
+	char path[PATH_LEN_MAX];
+	char download_path[PATH_LEN_MAX];
+	FILE * fp;
+	uint64_t cur_offset;
+	uint64_t latest_write_len;
+
+	struct unzip_param *uzip_param_array;
+	uint32_t unzip_num;
+	THREAD_POLL pThreadPoll;
+
+	int is_open;
+	pthread_mutex_t session_lock;
+};
+
+enum {
+	TAG_SFILE_HEAD = 1,
+	TAG_SFILE_PATH,
+	TAG_SFILE_SIZE,
+	TAG_SFILE_MODE,
+};
+
+struct unzip_param
+{
+	char src_path[PATH_LEN_MAX];
+	uint64_t unzip_start_index;
+	uint64_t unzip_len;
+	char unzip_path[PATH_LEN_MAX];
+};
+
+struct thread_param
+{
+	struct mfile_session *pHandle;
+	struct unzip_param unzip_param;
+};
+
+STATIC int is_open(struct mfile_session *pHandle)
+{
+	pthread_mutex_lock(&pHandle->session_lock);
+	int is_open = pHandle->is_open;
+	pthread_mutex_unlock(&pHandle->session_lock);
+	return is_open;
+}
+
+void * thread_unzip(void *arg)
+{
+	if (NULL == arg)
+	{
+		return NULL;
+	}
+	struct thread_param *thread_param = (struct thread_param *)arg;
+	if (NULL == thread_param)
+	{
+		return NULL;
+	}
+	if (file_access(thread_param->unzip_param.src_path) == -1)
+	{
+		return NULL;
+	}
+	if (file_access(thread_param->unzip_param.unzip_path) == -1)
+	{
+		file_touch(thread_param->unzip_param.unzip_path, FILE_MODE_DEFAULT);
+	}
+	FILE *fp_src = file_open(thread_param->unzip_param.src_path, "rb");
+	FILE *fp_dest = file_open(thread_param->unzip_param.unzip_path, "rb+");
+	if (NULL == fp_src)
+	{
+		return -1;
+	}
+	if (NULL == fp_dest)
+	{
+		return -1;
+	}
+	int ret = fseeko64(fp_src, thread_param->unzip_param.unzip_start_index, SEEK_SET);
+	if (ret < 0)
+	{
+		fclose(fp_src);
+		fclose(fp_dest);
+		return NULL;
+	}
+	int block_size = 992;
+	char buf[1024] = { '\0' };
+	int cnt = 0;
+	uint64_t unzip_cnt = 0;
+	while (is_open(thread_param->pHandle) && unzip_cnt < thread_param->unzip_param.unzip_len && (cnt = fread(buf, 1, block_size, fp_src)) > 0)
+	{
+		if (unzip_cnt + cnt > thread_param->unzip_param.unzip_len)
+		{
+			cnt = thread_param->unzip_param.unzip_len - unzip_cnt;
+		}
+		unzip_cnt += cnt;
+		fwrite(buf, 1, cnt, fp_dest);
+		memset(buf, 0, sizeof(buf));
+	}
+	fclose(fp_src);
+	fclose(fp_dest);
+	free(thread_param);
+	thread_param = NULL;
+	return NULL;
+}
+
+STATIC int is_already_unzip(struct mfile_session *pHandle, const char *unzip_path)
+{
+	if (NULL == pHandle)
+	{
+		return 0;
+	}
+	for (int i = 0; i < pHandle->unzip_num; i++)
+	{
+		if (strcmp(pHandle->uzip_param_array[i].unzip_path, unzip_path) == 0)
+		{
+			return 1;
+		}
+	}
+	return 0;
+}
+
+STATIC void append_unzip_param(struct mfile_session *pHandle, struct unzip_param param)
+{
+	if (NULL == pHandle)
+	{
+		return;
+	}
+	for (int i = 0; i < pHandle->unzip_num; i++)
+	{
+		if (strcmp(pHandle->uzip_param_array[i].unzip_path, "") == 0)
+		{
+			memset(pHandle->uzip_param_array[i].src_path, 0, sizeof(pHandle->uzip_param_array[i].src_path));
+			strncpy(pHandle->uzip_param_array[i].src_path, param.src_path, sizeof(param.src_path));
+			pHandle->uzip_param_array[i].src_path[sizeof(pHandle->uzip_param_array[i].src_path) - 1] = '\0';
+
+			memset(pHandle->uzip_param_array[i].unzip_path, 0, sizeof(pHandle->uzip_param_array[i].unzip_path));
+			strncpy(pHandle->uzip_param_array[i].unzip_path, param.unzip_path, sizeof(param.unzip_path));
+			pHandle->uzip_param_array[i].unzip_path[sizeof(pHandle->uzip_param_array[i].unzip_path) - 1] = '\0';
+
+			pHandle->uzip_param_array[i].unzip_start_index = param.unzip_start_index;
+			pHandle->uzip_param_array[i].unzip_len = param.unzip_len;
+			return;
+		}
+	}
+	uint32_t unzip_num = pHandle->unzip_num * 2;
+	if (unzip_num > pHandle->sfile_num)
+	{
+		unzip_num = pHandle->sfile_num;
+	}
+	struct unzip_param *uzip_param_array = (struct unzip_param *)malloc(sizeof(struct unzip_param) * unzip_num);
+	for (int i = 0; i < unzip_num; i++)
+	{
+		memset(uzip_param_array[i].src_path, 0, sizeof(uzip_param_array[i].src_path));
+		memset(uzip_param_array[i].unzip_path, 0, sizeof(uzip_param_array[i].unzip_path));
+		uzip_param_array[i].unzip_start_index = 0;
+		uzip_param_array[i].unzip_len = 0;
+
+		if (i < pHandle->unzip_num)
+		{
+			strncpy(uzip_param_array[i].src_path, pHandle->uzip_param_array[i].src_path, sizeof(pHandle->uzip_param_array[i].src_path));
+			uzip_param_array[i].src_path[sizeof(uzip_param_array[i].src_path) - 1] = '\0';
+
+			strncpy(uzip_param_array[i].unzip_path, pHandle->uzip_param_array[i].unzip_path, sizeof(pHandle->uzip_param_array[i].unzip_path));
+			uzip_param_array[i].unzip_path[sizeof(uzip_param_array[i].unzip_path) - 1] = '\0';
+
+			uzip_param_array[i].unzip_start_index = pHandle->uzip_param_array[i].unzip_start_index;
+			uzip_param_array[i].unzip_len = pHandle->uzip_param_array[i].unzip_len;
+		}
+		else if (i == pHandle->unzip_num)
+		{
+			strncpy(uzip_param_array[i].src_path, param.src_path, sizeof(pHandle->uzip_param_array[i].src_path));
+			uzip_param_array[i].src_path[sizeof(uzip_param_array[i].src_path) - 1] = '\0';
+
+			strncpy(uzip_param_array[i].unzip_path, param.unzip_path, sizeof(pHandle->uzip_param_array[i].unzip_path));
+			uzip_param_array[i].unzip_path[sizeof(uzip_param_array[i].unzip_path) - 1] = '\0';
+
+			uzip_param_array[i].unzip_start_index = param.unzip_start_index;
+			uzip_param_array[i].unzip_len = param.unzip_len;
+		}
+	}
+	free(pHandle->uzip_param_array);
+	pHandle->uzip_param_array = uzip_param_array;
+	pHandle->unzip_num = unzip_num;
+}
+
+STATIC void count_head_size(struct mfile_session *pHandle)
+{
+	if (NULL == pHandle)
+	{
+		return;
+	}
+	pHandle->head_size = 0;
+	pHandle->head_size += sizeof(pHandle->file_type);
+	pHandle->head_size += sizeof(pHandle->sfile_num);
+	for (int i = 0; i < pHandle->sfile_num; i++)
+	{
+		pHandle->head_size += sizeof(uint16_t);
+		pHandle->head_size += sizeof(uint16_t);
+
+		pHandle->head_size += sizeof(uint16_t);
+		pHandle->head_size += sizeof(uint16_t);
+		pHandle->head_size += TLV_PAD(strlen(pHandle->sfile_array[i].file_path));
+
+		pHandle->head_size += sizeof(uint16_t);
+		pHandle->head_size += sizeof(uint16_t);
+		pHandle->head_size += TLV_PAD(sizeof(pHandle->sfile_array[i].file_size));
+
+		pHandle->head_size += sizeof(uint16_t);
+		pHandle->head_size += sizeof(uint16_t);
+		pHandle->head_size += TLV_PAD(sizeof(pHandle->sfile_array[i].file_mode));
+	}
+}
+
+STATIC void load_head(struct mfile_session *pHandle)
+{
+	if (NULL == pHandle)
+	{
+		return;
+	}
+	count_head_size(pHandle);
+	pHandle->head_buf = (uint8_t *)malloc(sizeof(uint8_t) * pHandle->head_size);
+	if (NULL == pHandle->head_buf)
+	{
+		return;
+	}
+	uint64_t remain_buf_len = pHandle->head_size;
+	int iter = 0;
+	*(uint32_t *)(pHandle->head_buf + iter) = htons(pHandle->file_type); iter += sizeof(uint32_t); remain_buf_len -= sizeof(uint32_t);
+	*(uint32_t *)(pHandle->head_buf + iter) = htons(pHandle->sfile_num); iter += sizeof(uint32_t); remain_buf_len -= sizeof(uint32_t);
+	for (int i = 0; i < pHandle->sfile_num; i++)
+	{
+		uint16_t sfile_head_type = TAG_SFILE_HEAD;
+		uint16_t sfile_head_len = 0;
+		sfile_head_len += sizeof(uint16_t);
+		sfile_head_len += sizeof(uint16_t);
+		sfile_head_len += TLV_PAD(strlen(pHandle->sfile_array[i].file_path));
+		sfile_head_len += sizeof(uint16_t);
+		sfile_head_len += sizeof(uint16_t);
+		sfile_head_len += TLV_PAD(sizeof(pHandle->sfile_array[i].file_size));
+		sfile_head_len += sizeof(uint16_t);
+		sfile_head_len += sizeof(uint16_t);
+		sfile_head_len += TLV_PAD(sizeof(pHandle->sfile_array[i].file_mode));
+
+		*(uint16_t *)(pHandle->head_buf + iter) = htons(sfile_head_type); iter += sizeof(uint16_t); remain_buf_len -= sizeof(uint16_t);
+		*(uint16_t *)(pHandle->head_buf + iter) = htons(sfile_head_len); iter += sizeof(uint16_t); remain_buf_len -= sizeof(uint16_t);
+		int total_len = tlv_raw_append(pHandle->head_buf, remain_buf_len, TAG_SFILE_PATH, pHandle->sfile_array[i].file_path, strlen(pHandle->sfile_array[i].file_path), iter); iter += total_len; remain_buf_len -= total_len;
+		total_len = tlv_raw_append(pHandle->head_buf, remain_buf_len, TAG_SFILE_SIZE, pHandle->sfile_array[i].file_size, sizeof(pHandle->sfile_array[i].file_size), iter); iter += total_len; remain_buf_len -= total_len;
+		total_len = tlv_raw_append(pHandle->head_buf, remain_buf_len, TAG_SFILE_MODE, pHandle->sfile_array[i].file_mode, sizeof(pHandle->sfile_array[i].file_mode), iter); iter += total_len; remain_buf_len -= total_len;
+	}
+}
+
+STATIC void unzip_latest_sfile(struct mfile_session *pHandle)
+{
+	if (NULL == pHandle)
+	{
+		return;
+	}
+	if (pHandle->head_size == 0)
+	{
+		FILE * fp = fopen(pHandle->path, "rb");
+		if (NULL == fp)
+		{
+			return;
+		}
+		uint32_t file_type = 0;
+		uint32_t sfile_num = 0;
+
+		int cnt = 0;
+		cnt = fread(&file_type, 1, sizeof(file_type), fp);
+		if (cnt < sizeof(file_type))
+		{
+			fclose(fp);
+			return;
+		}
+		cnt = fread(&sfile_num, 1, sizeof(sfile_num), fp);
+		if (cnt < sizeof(sfile_num))
+		{
+			fclose(fp);
+			return;
+		}
+		struct sfile *sfile_array = (struct sfile *)malloc(sizeof(struct sfile) * sfile_num);
+		if (NULL == sfile_array)
+		{
+			fclose(fp);
+			return;
+		}
+		for (int i = 0; i < sfile_num; i++)
+		{
+			uint16_t sfile_head_type = 0;
+			uint16_t sfile_head_len = 0;
+			cnt = fread(&sfile_head_type, 1, sizeof(sfile_head_type), fp);
+			if (cnt < sizeof(sfile_head_type))
+			{
+				free(sfile_array);
+				fclose(fp);
+				return;
+			}
+			if (sfile_head_type != TAG_SFILE_HEAD)
+			{
+				free(sfile_array);
+				fclose(fp);
+				return;
+			}
+			cnt = fread(&sfile_head_len, 1, sizeof(sfile_head_len), fp);
+			if (cnt < sizeof(sfile_head_len))
+			{
+				free(sfile_array);
+				fclose(fp);
+				return;
+			}
+			uint8_t *buf = (uint8_t *)malloc(sizeof(uint8_t) * sfile_head_len);
+			if (NULL == buf)
+			{
+				free(sfile_array);
+				fclose(fp);
+				return;
+			}
+			cnt = fread(buf, 1, sfile_head_len, fp);
+			if (cnt < sfile_head_len)
+			{
+				free(buf);
+				free(sfile_array);
+				fclose(fp);
+				return;
+			}
+			int iter = 0;
+			struct tlv tlv;
+			tlv_init(&tlv);
+			tlv_raw_parse(&tlv, buf, sfile_head_len, iter);
+			if (tlv.type != TAG_SFILE_PATH)
+			{
+				free(buf);
+				free(sfile_array);
+				fclose(fp);
+				return;
+			}
+			memset(sfile_array[i].file_path, 0, sizeof(sfile_array[i].file_path));
+			strncpy(sfile_array[i].file_path, tlv.value, tlv.len);
+			iter += tlv.total_len;
+
+			tlv_init(&tlv);
+			tlv_raw_parse(&tlv, buf, sfile_head_len, iter);
+			if (tlv.type != TAG_SFILE_SIZE)
+			{
+				free(buf);
+				free(sfile_array);
+				fclose(fp);
+				return;
+			}
+			char size_buf[128];
+			memset(size_buf, 0, sizeof(size_buf));
+			strncpy(size_buf, tlv.value, tlv.len);
+			sfile_array[i].file_size = atoi(size_buf);
+			iter += tlv.total_len;
+
+			tlv_init(&tlv);
+			tlv_raw_parse(&tlv, buf, sfile_head_len, iter);
+			if (tlv.type != TAG_SFILE_MODE)
+			{
+				free(buf);
+				free(sfile_array);
+				fclose(fp);
+				return;
+			}
+			char mode_buf[128];
+			memset(mode_buf, 0, sizeof(mode_buf));
+			strncpy(mode_buf, tlv.value, tlv.len);
+			sfile_array[i].file_mode = atoi(mode_buf);
+			iter += tlv.total_len;
+
+			free(buf);
+		}
+#ifdef WIN32
+		pHandle->head_size = ftello64(fp);
+#else
+		pHandle->head_size = ftello(fp);
+#endif
+		fclose(fp);
+		pHandle->file_type = file_type;
+		pHandle->sfile_num = sfile_num;
+		pHandle->sfile_array = sfile_array;
+	}
+	uint64_t latest_write_start = pHandle->cur_offset - pHandle->latest_write_len;
+	uint64_t latest_write_end = pHandle->cur_offset;
+	uint64_t tmp_size = pHandle->head_size;
+	for (int i = 0; i < pHandle->sfile_num; i++)
+	{
+		tmp_size += pHandle->sfile_array[i].file_size;
+		if (latest_write_start < tmp_size)
+		{
+			tmp_size -= pHandle->sfile_array[i].file_size;
+			for (int j = i; j < pHandle->sfile_num; j++)
+			{
+				tmp_size += pHandle->sfile_array[j].file_size;
+				if (latest_write_end >= tmp_size)
+				{
+					//pHandle->sfile_array[j].file_path
+					char download_path[PATH_LEN_MAX];
+					path_removeSuffix(pHandle->download_path, download_path, sizeof(download_path));
+					char file_path[PATH_LEN_MAX];
+					path_AddPrefix(pHandle->sfile_array[j].file_path, file_path, sizeof(file_path));
+					char unzip_path[PATH_LEN_MAX];
+					memset(unzip_path, 0, sizeof(unzip_path));
+					sprintf(unzip_path, "%s%s", download_path, file_path);
+					if (is_already_unzip(pHandle, unzip_path))
+					{
+						continue;
+					}
+					int64_t fileSize = 0;
+					if (file_access(unzip_path) == -1 || (file_size(unzip_path, &fileSize) == 0 && fileSize != pHandle->sfile_array[j].file_size))
+					{
+						//thread unzip
+						struct unzip_param unzip_param;
+						memset(unzip_param.src_path, 0, sizeof(unzip_param.src_path));
+						strncpy(unzip_param.src_path, pHandle->path, sizeof(pHandle->path));
+						unzip_param.src_path[sizeof(unzip_param.src_path) - 1] = '\0';
+
+						memset(unzip_param.unzip_path, 0, sizeof(unzip_param.unzip_path));
+						strncpy(unzip_param.unzip_path, unzip_path, sizeof(unzip_path));
+						unzip_param.unzip_path[sizeof(unzip_param.unzip_path) - 1] = '\0';
+
+						unzip_param.unzip_start_index = tmp_size - pHandle->sfile_array[j].file_size;
+						unzip_param.unzip_len = pHandle->sfile_array[j].file_size;
+
+						append_unzip_param(pHandle, unzip_param);
+
+						struct thread_param *thread_param = (struct thread_param *)malloc(sizeof(struct thread_param));
+						thread_param->pHandle = pHandle;
+						thread_param->unzip_param = unzip_param;
+						threadpoll_add_task(pHandle->pThreadPoll, thread_unzip, (void *)thread_param);
+					}
+				}
+				else
+				{
+					break;
+				}
+			}
+			break;
+		}
+	}
+}
+
+MFILE *mfopen(const struct mfopen_context *context, const char *mode)
+{
+	if (NULL == context || NULL == mode)
+	{
+		return NULL;
+	}
+	struct mfile_session *pHandle = (struct mfile_session *)malloc(sizeof(struct mfile_session));
+	if (NULL == pHandle)
+	{
+		return NULL;
+	}
+	pHandle->file_type = COM_MULTI_FILE_APPEND_VIRTUAL;
+	pHandle->sfile_num = context->sfile_num;
+	pHandle->sfile_array = NULL;
+	pHandle->head_buf = NULL;
+	pHandle->head_size = 0;
+	pHandle->op = context->op;
+	strncpy(pHandle->path, context->path, PATH_LEN_MAX);
+	pHandle->path[PATH_LEN_MAX - 1] = '\0';
+	pHandle->fp = NULL;
+	pHandle->cur_offset = 0;
+	pHandle->uzip_param_array = NULL;
+	pHandle->unzip_num = 0;
+	pHandle->pThreadPoll = NULL;
+	pHandle->is_open = 1;
+	pthread_mutex_init(&pHandle->session_lock, NULL);
+	if (pHandle->op == 0)
+	{
+		pHandle->sfile_array = (struct sfile *)malloc(sizeof(struct sfile) * pHandle->sfile_num);
+		for (int i = 0; i < context->sfile_num; i++)
+		{
+			strncpy(pHandle->sfile_array[i].file_abs, context->sfile_array[i].file_abs, PATH_LEN_MAX);
+			pHandle->sfile_array[i].file_abs[PATH_LEN_MAX - 1] = '\0';
+			strncpy(pHandle->sfile_array[i].file_path, context->sfile_array[i].file_path, PATH_LEN_MAX);
+			pHandle->sfile_array[i].file_path[PATH_LEN_MAX - 1] = '\0';
+			pHandle->sfile_array[i].file_size = context->sfile_array[i].file_size;
+			pHandle->sfile_array[i].file_mode = context->sfile_array[i].file_mode;
+		}
+		load_head(pHandle);
+	}
+	else
+	{
+		pHandle->unzip_num = DEFAULT_UNZIP_NUM;
+		if (pHandle->unzip_num > pHandle->sfile_num)
+		{
+			pHandle->unzip_num = pHandle->sfile_num;
+		}
+		pHandle->uzip_param_array = (struct unzip_param *)malloc(sizeof(struct unzip_param) * pHandle->unzip_num);
+		for (int i = 0; i < pHandle->unzip_num; i++)
+		{
+			memset(pHandle->uzip_param_array[i].src_path, 0, sizeof(pHandle->uzip_param_array[i].src_path));
+			memset(pHandle->uzip_param_array[i].unzip_path, 0, sizeof(pHandle->uzip_param_array[i].unzip_path));
+			pHandle->uzip_param_array[i].unzip_start_index = 0;
+			pHandle->uzip_param_array[i].unzip_len = 0;
+		}
+		pHandle->pThreadPoll = threadpoll_create(2, MAX_THREAD_NUM, MAX_TASK_SIZE);
+	}
+	return pHandle;
+}
+
+int mfclose(MFILE *fp)
+{
+	if (NULL == fp)
+	{
+		return -1;
+	}
+	struct mfile_session *pHandle = (struct mfile_session *)fp;
+	pthread_mutex_lock(&pHandle->session_lock);
+	pHandle->is_open = 0;
+	pthread_mutex_unlock(&pHandle->session_lock);
+	if (pHandle->pThreadPoll != NULL)
+	{
+		threadpoll_destroy(pHandle->pThreadPoll);
+		pHandle->pThreadPoll = NULL;
+	}
+	pthread_mutex_destroy(&pHandle->session_lock);
+	if (pHandle->uzip_param_array != NULL)
+	{
+		free(pHandle->uzip_param_array);
+		pHandle->uzip_param_array = NULL;
+	}
+	if (pHandle->fp != NULL)
+	{
+		fclose(pHandle->fp);
+		pHandle->fp = NULL;
+	}
+	if (pHandle->head_buf != NULL)
+	{
+		free(pHandle->head_buf);
+		pHandle->head_buf = NULL;
+	}
+	if (pHandle->sfile_array != NULL)
+	{
+		free(pHandle->sfile_array);
+		pHandle->sfile_array = NULL;
+	}
+	free(pHandle);
+	pHandle = NULL;
+	return 0;
+}
+
+int mfseek(MFILE *stream, long offset, int whence)
+{
+	return 0;
+}
+
+int mfread(void *ptr, size_t size, size_t nmemb, MFILE *stream)
+{
+	return 0;
+}
+
+size_t mfwrite(const void *ptr, size_t size, size_t nmeb, MFILE *stream)
+{
+	return 0;
+}

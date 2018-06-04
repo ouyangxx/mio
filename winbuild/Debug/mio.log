@@ -1,0 +1,122 @@
+﻿Build started 2018/6/4 11:10:23.
+     1>Project "C:\Users\dell\Desktop\mio\winbuild\mio.vcxproj" on node 2 (Rebuild target(s)).
+     1>ClCompile:
+         D:\Program Files\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I"..\pthread-win32\include" /I..\ /I"D:\Program Files (x86)\Visual Leak Detector\include" /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _USRDLL /D MIO_EXPORTS /D WIN32_LEAN_AND_MEAN /D _WINDLL /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TC /analyze- /errorReport:prompt ..\file.c ..\mio.c ..\threadpoll.c ..\tlv.c
+         tlv.c
+     1>c:\users\dell\desktop\mio\tlv.h : warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+         threadpoll.c
+         mio.c
+     1>c:\users\dell\desktop\mio\tlv.h : warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+     1>c:\users\dell\desktop\mio\mio.c(102): warning C4047: 'return' : 'void *' differs in levels of indirection from 'int'
+     1>c:\users\dell\desktop\mio\mio.c(106): warning C4047: 'return' : 'void *' differs in levels of indirection from 'int'
+     1>c:\users\dell\desktop\mio\mio.c(123): warning C4244: '=' : conversion from 'uint64_t' to 'int', possible loss of data
+     1>c:\users\dell\desktop\mio\mio.c(142): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\dell\desktop\mio\mio.c(158): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\dell\desktop\mio\mio.c(163): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 d:\program files\microsoft visual studio 12.0\vc\include\string.h(195) : see declaration of 'strncpy'
+     1>c:\users\dell\desktop\mio\mio.c(167): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 d:\program files\microsoft visual studio 12.0\vc\include\string.h(195) : see declaration of 'strncpy'
+     1>c:\users\dell\desktop\mio\mio.c(181): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\dell\desktop\mio\mio.c(188): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\dell\desktop\mio\mio.c(190): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 d:\program files\microsoft visual studio 12.0\vc\include\string.h(195) : see declaration of 'strncpy'
+     1>c:\users\dell\desktop\mio\mio.c(193): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 d:\program files\microsoft visual studio 12.0\vc\include\string.h(195) : see declaration of 'strncpy'
+     1>c:\users\dell\desktop\mio\mio.c(201): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 d:\program files\microsoft visual studio 12.0\vc\include\string.h(195) : see declaration of 'strncpy'
+     1>c:\users\dell\desktop\mio\mio.c(204): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 d:\program files\microsoft visual studio 12.0\vc\include\string.h(195) : see declaration of 'strncpy'
+     1>c:\users\dell\desktop\mio\mio.c(225): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\dell\desktop\mio\mio.c(251): warning C4244: 'function' : conversion from 'uint64_t' to 'size_t', possible loss of data
+     1>c:\users\dell\desktop\mio\mio.c(260): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\dell\desktop\mio\mio.c(276): warning C4244: 'function' : conversion from 'uint64_t' to 'int', possible loss of data
+     1>c:\users\dell\desktop\mio\mio.c(277): warning C4244: 'function' : conversion from 'uint64_t' to 'int', possible loss of data
+     1>c:\users\dell\desktop\mio\mio.c(277): warning C4047: 'function' : 'uint8_t *' differs in levels of indirection from 'uint64_t'
+     1>c:\users\dell\desktop\mio\mio.c(277): warning C4024: 'tlv_raw_append' : different types for formal and actual parameter 4
+     1>c:\users\dell\desktop\mio\mio.c(278): warning C4244: 'function' : conversion from 'uint64_t' to 'int', possible loss of data
+     1>c:\users\dell\desktop\mio\mio.c(278): warning C4047: 'function' : 'uint8_t *' differs in levels of indirection from 'uint32_t'
+     1>c:\users\dell\desktop\mio\mio.c(278): warning C4024: 'tlv_raw_append' : different types for formal and actual parameter 4
+     1>c:\users\dell\desktop\mio\mio.c(290): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 d:\program files\microsoft visual studio 12.0\vc\include\stdio.h(211) : see declaration of 'fopen'
+     1>c:\users\dell\desktop\mio\mio.c(317): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\dell\desktop\mio\mio.c(368): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 d:\program files\microsoft visual studio 12.0\vc\include\string.h(195) : see declaration of 'strncpy'
+     1>c:\users\dell\desktop\mio\mio.c(382): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 d:\program files\microsoft visual studio 12.0\vc\include\string.h(195) : see declaration of 'strncpy'
+     1>c:\users\dell\desktop\mio\mio.c(397): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 d:\program files\microsoft visual studio 12.0\vc\include\string.h(195) : see declaration of 'strncpy'
+     1>c:\users\dell\desktop\mio\mio.c(416): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\dell\desktop\mio\mio.c(422): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\dell\desktop\mio\mio.c(431): warning C4013: 'path_AddPrefix' undefined; assuming extern returning int
+     1>c:\users\dell\desktop\mio\mio.c(434): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 d:\program files\microsoft visual studio 12.0\vc\include\stdio.h(356) : see declaration of 'sprintf'
+     1>c:\users\dell\desktop\mio\mio.c(445): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 d:\program files\microsoft visual studio 12.0\vc\include\string.h(195) : see declaration of 'strncpy'
+     1>c:\users\dell\desktop\mio\mio.c(449): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 d:\program files\microsoft visual studio 12.0\vc\include\string.h(195) : see declaration of 'strncpy'
+     1>c:\users\dell\desktop\mio\mio.c(490): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 d:\program files\microsoft visual studio 12.0\vc\include\string.h(195) : see declaration of 'strncpy'
+     1>c:\users\dell\desktop\mio\mio.c(502): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\dell\desktop\mio\mio.c(504): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 d:\program files\microsoft visual studio 12.0\vc\include\string.h(195) : see declaration of 'strncpy'
+     1>c:\users\dell\desktop\mio\mio.c(506): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 d:\program files\microsoft visual studio 12.0\vc\include\string.h(195) : see declaration of 'strncpy'
+     1>c:\users\dell\desktop\mio\mio.c(521): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\dell\desktop\mio\mio.c(530): warning C4047: 'return' : 'MFILE *' differs in levels of indirection from 'mfile_session *'
+         file.c
+     1>c:\users\dell\desktop\mio\file.c(34): warning C4996: 'wcscpy': This function or variable may be unsafe. Consider using wcscpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 d:\program files\microsoft visual studio 12.0\vc\include\string.h(294) : see declaration of 'wcscpy'
+     1>c:\users\dell\desktop\mio\file.c(43): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 d:\program files\microsoft visual studio 12.0\vc\include\string.h(195) : see declaration of 'strncpy'
+     1>c:\users\dell\desktop\mio\file.c(64): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 d:\program files\microsoft visual studio 12.0\vc\include\string.h(195) : see declaration of 'strncpy'
+     1>c:\users\dell\desktop\mio\file.c(84): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 d:\program files\microsoft visual studio 12.0\vc\include\string.h(195) : see declaration of 'strncpy'
+     1>c:\users\dell\desktop\mio\file.c(103): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 d:\program files\microsoft visual studio 12.0\vc\include\string.h(195) : see declaration of 'strncpy'
+     1>c:\users\dell\desktop\mio\file.c(115): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 d:\program files\microsoft visual studio 12.0\vc\include\string.h(195) : see declaration of 'strncpy'
+     1>c:\users\dell\desktop\mio\file.c(153): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 d:\program files\microsoft visual studio 12.0\vc\include\string.h(195) : see declaration of 'strncpy'
+     1>c:\users\dell\desktop\mio\file.c(185): warning C4996: 'strncat': This function or variable may be unsafe. Consider using strncat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 d:\program files\microsoft visual studio 12.0\vc\include\string.h(186) : see declaration of 'strncat'
+     1>c:\users\dell\desktop\mio\file.c(219): warning C4047: 'return' : 'int' differs in levels of indirection from 'void *'
+     1>c:\users\dell\desktop\mio\file.c(223): warning C4047: 'return' : 'int' differs in levels of indirection from 'void *'
+     1>c:\users\dell\desktop\mio\file.c(237): warning C4047: 'return' : 'int' differs in levels of indirection from 'void *'
+     1>c:\users\dell\desktop\mio\file.c(267): warning C4996: '_wfopen': This function or variable may be unsafe. Consider using _wfopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 d:\program files\microsoft visual studio 12.0\vc\include\stdio.h(590) : see declaration of '_wfopen'
+     1>c:\users\dell\desktop\mio\file.c(465): warning C4133: 'function' : incompatible types - from 'const char *' to 'LPCWSTR'
+     1>c:\users\dell\desktop\mio\file.c(476): warning C4554: '<<' : check operator precedence for possible error; use parentheses to clarify precedence
+     1>c:\users\dell\desktop\mio\file.c(498): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 d:\program files\microsoft visual studio 12.0\vc\include\string.h(195) : see declaration of 'strncpy'
+     1>c:\users\dell\desktop\mio\file.c(517): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 d:\program files\microsoft visual studio 12.0\vc\include\string.h(195) : see declaration of 'strncpy'
+     1>c:\users\dell\desktop\mio\file.c(530): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 d:\program files\microsoft visual studio 12.0\vc\include\string.h(195) : see declaration of 'strncpy'
+     1>c:\users\dell\desktop\mio\file.c(543): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 d:\program files\microsoft visual studio 12.0\vc\include\string.h(195) : see declaration of 'strncpy'
+     1>c:\users\dell\desktop\mio\file.c(545): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 d:\program files\microsoft visual studio 12.0\vc\include\string.h(195) : see declaration of 'strncpy'
+     1>c:\users\dell\desktop\mio\file.c(550): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 d:\program files\microsoft visual studio 12.0\vc\include\string.h(195) : see declaration of 'strncpy'
+     1>c:\users\dell\desktop\mio\file.c(560): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 d:\program files\microsoft visual studio 12.0\vc\include\stdio.h(356) : see declaration of 'sprintf'
+     1>c:\users\dell\desktop\mio\file.c(561): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 d:\program files\microsoft visual studio 12.0\vc\include\string.h(118) : see declaration of 'strcat'
+     1>c:\users\dell\desktop\mio\file.c(562): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 d:\program files\microsoft visual studio 12.0\vc\include\string.h(118) : see declaration of 'strcat'
+     1>c:\users\dell\desktop\mio\file.c(563): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 d:\program files\microsoft visual studio 12.0\vc\include\string.h(118) : see declaration of 'strcat'
+         Generating Code...
+       Link:
+         D:\Program Files\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\dell\Desktop\mio\winbuild\Debug\mio.dll" /INCREMENTAL /NOLOGO /LIBPATH:"..\pthread-win32\libs" /LIBPATH:"D:\Program Files (x86)\Visual Leak Detector\lib\Win32" ws2_32.lib pthreadVC2.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\dell\Desktop\mio\winbuild\Debug\mio.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\dell\Desktop\mio\winbuild\Debug\mio.lib" /MACHINE:X86 /DLL Debug\file.obj
+         Debug\mio.obj
+         Debug\threadpoll.obj
+         Debug\tlv.obj
+            Creating library C:\Users\dell\Desktop\mio\winbuild\Debug\mio.lib and object C:\Users\dell\Desktop\mio\winbuild\Debug\mio.exp
+         mio.vcxproj -> C:\Users\dell\Desktop\mio\winbuild\Debug\mio.dll
+     1>Done Building Project "C:\Users\dell\Desktop\mio\winbuild\mio.vcxproj" (Rebuild target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:00.64
