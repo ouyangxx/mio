@@ -8,7 +8,7 @@ LDFLAGS = -lpthread
 
 CC = gcc
 
-SRC_FILE = $(wildcard src/*.c compat/*.c)
+SRC_FILE = $(wildcard *.c)
 
 OBJ_FILE = $(patsubst %.c,%.o,$(SRC_FILE)) 
               			
@@ -18,7 +18,6 @@ all:$(TARGET)
                                
 $(TARGET):$(OBJ_FILE)
 	$(CC) -shared $^ $(LDFLAGS) -o $@
-	-mv $(TARGET) lib
 	@echo "Compile success..."
 	
 %.o:%.c
@@ -28,5 +27,5 @@ $(TARGET):$(OBJ_FILE)
 clean:
 	@echo "clean begin..."
 	-rm -f $(OBJ_FILE)
-	-rm -f lib/$(TARGET)
+	-rm -f $(TARGET)
 	@echo "clean success..."

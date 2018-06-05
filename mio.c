@@ -12,7 +12,7 @@
 #include <winsock.h> 
 #else
 #include <unistd.h>
-#include <arpa/inet.h>¡¡
+#include <arpa/inet.h>
 #endif
 
 #define DEFAULT_UNZIP_NUM	(10)
@@ -99,13 +99,17 @@ void * thread_unzip(void *arg)
 	FILE *fp_dest = file_open(thread_param->unzip_param.unzip_path, "rb+");
 	if (NULL == fp_src)
 	{
-		return -1;
+		return NULL;
 	}
 	if (NULL == fp_dest)
 	{
-		return -1;
+		return NULL;
 	}
+    #ifdef WIN32
 	int ret = fseeko64(fp_src, thread_param->unzip_param.unzip_start_index, SEEK_SET);
+    #else
+    int ret = fseeko(fp_src, thread_param->unzip_param.unzip_start_index, SEEK_SET);
+    #endif
 	if (ret < 0)
 	{
 		fclose(fp_src);
@@ -120,7 +124,7 @@ void * thread_unzip(void *arg)
 	{
 		if (unzip_cnt + cnt > thread_param->unzip_param.unzip_len)
 		{
-			cnt = thread_param->unzip_param.unzip_len - unzip_cnt;
+			cnt = (int)(thread_param->unzip_param.unzip_len - unzip_cnt);
 		}
 		unzip_cnt += cnt;
 		fwrite(buf, 1, cnt, fp_dest);
@@ -139,7 +143,8 @@ STATIC int is_already_unzip(struct mfile_session *pHandle, const char *unzip_pat
 	{
 		return 0;
 	}
-	for (int i = 0; i < pHandle->unzip_num; i++)
+	int i = 0;
+	for (i = 0; i < pHandle->unzip_num; i++)
 	{
 		if (strcmp(pHandle->uzip_param_array[i].unzip_path, unzip_path) == 0)
 		{
@@ -155,7 +160,8 @@ STATIC void append_unzip_param(struct mfile_session *pHandle, struct unzip_param
 	{
 		return;
 	}
-	for (int i = 0; i < pHandle->unzip_num; i++)
+	int i = 0;
+	for (i = 0; i < pHandle->unzip_num; i++)
 	{
 		if (strcmp(pHandle->uzip_param_array[i].unzip_path, "") == 0)
 		{
@@ -178,7 +184,7 @@ STATIC void append_unzip_param(struct mfile_session *pHandle, struct unzip_param
 		unzip_num = pHandle->sfile_num;
 	}
 	struct unzip_param *uzip_param_array = (struct unzip_param *)malloc(sizeof(struct unzip_param) * unzip_num);
-	for (int i = 0; i < unzip_num; i++)
+	for (i = 0; i < unzip_num; i++)
 	{
 		memset(uzip_param_array[i].src_path, 0, sizeof(uzip_param_array[i].src_path));
 		memset(uzip_param_array[i].unzip_path, 0, sizeof(uzip_param_array[i].unzip_path));
@@ -219,6 +225,7 @@ STATIC void unzip_latest_sfile(struct mfile_session *pHandle)
 	{
 		return;
 	}
+	int i = 0, j = 0;
 	if (pHandle->head_size == 0)
 	{
 		FILE * fp = fopen(pHandle->path, "rb");
@@ -248,7 +255,7 @@ STATIC void unzip_latest_sfile(struct mfile_session *pHandle)
 			fclose(fp);
 			return;
 		}
-		for (int i = 0; i < sfile_num; i++)
+		for (i = 0; i < sfile_num; i++)
 		{
 			uint16_t sfile_head_type = 0;
 			uint16_t sfile_head_len = 0;
@@ -347,13 +354,13 @@ STATIC void unzip_latest_sfile(struct mfile_session *pHandle)
 	uint64_t latest_write_start = pHandle->cur_offset - pHandle->latest_write_len;
 	uint64_t latest_write_end = pHandle->cur_offset;
 	uint64_t tmp_size = pHandle->head_size;
-	for (int i = 0; i < pHandle->sfile_num; i++)
+	for (i = 0; i < pHandle->sfile_num; i++)
 	{
 		tmp_size += pHandle->sfile_array[i].file_size;
 		if (latest_write_start < tmp_size)
 		{
 			tmp_size -= pHandle->sfile_array[i].file_size;
-			for (int j = i; j < pHandle->sfile_num; j++)
+			for (j = i; j < pHandle->sfile_num; j++)
 			{
 				tmp_size += pHandle->sfile_array[j].file_size;
 				if (latest_write_end >= tmp_size)
@@ -410,10 +417,11 @@ STATIC void count_head_size(struct mfile_session *pHandle)
 	{
 		return;
 	}
+	int i = 0;
 	pHandle->head_size = 0;
 	pHandle->head_size += sizeof(pHandle->file_type);
 	pHandle->head_size += sizeof(pHandle->sfile_num);
-	for (int i = 0; i < pHandle->sfile_num; i++)
+	for (i = 0; i < pHandle->sfile_num; i++)
 	{
 		pHandle->head_size += sizeof(uint16_t);
 		pHandle->head_size += sizeof(uint16_t);
@@ -438,8 +446,9 @@ STATIC void load_head(struct mfile_session *pHandle)
 	{
 		return;
 	}
+	int i = 0;
 	count_head_size(pHandle);
-	pHandle->head_buf = (uint8_t *)malloc(sizeof(uint8_t)* pHandle->head_size);
+	pHandle->head_buf = (uint8_t *)malloc((size_t)(sizeof(uint8_t)* pHandle->head_size));
 	if (NULL == pHandle->head_buf)
 	{
 		return;
@@ -448,7 +457,7 @@ STATIC void load_head(struct mfile_session *pHandle)
 	int iter = 0;
 	*(uint32_t *)(pHandle->head_buf + iter) = htons(pHandle->file_type); iter += sizeof(uint32_t); remain_buf_len -= sizeof(uint32_t);
 	*(uint32_t *)(pHandle->head_buf + iter) = htons(pHandle->sfile_num); iter += sizeof(uint32_t); remain_buf_len -= sizeof(uint32_t);
-	for (int i = 0; i < pHandle->sfile_num; i++)
+	for (i = 0; i < pHandle->sfile_num; i++)
 	{
 		uint16_t sfile_head_type = TAG_SFILE_HEAD;
 		uint16_t sfile_head_len = 0;
@@ -464,9 +473,9 @@ STATIC void load_head(struct mfile_session *pHandle)
 
 		*(uint16_t *)(pHandle->head_buf + iter) = htons(sfile_head_type); iter += sizeof(uint16_t); remain_buf_len -= sizeof(uint16_t);
 		*(uint16_t *)(pHandle->head_buf + iter) = htons(sfile_head_len); iter += sizeof(uint16_t); remain_buf_len -= sizeof(uint16_t);
-		int total_len = tlv_raw_append(pHandle->head_buf, remain_buf_len, TAG_SFILE_PATH, pHandle->sfile_array[i].file_path, strlen(pHandle->sfile_array[i].file_path), iter); iter += total_len; remain_buf_len -= total_len;
-		total_len = tlv_raw_append(pHandle->head_buf, remain_buf_len, TAG_SFILE_SIZE, pHandle->sfile_array[i].file_size, sizeof(pHandle->sfile_array[i].file_size), iter); iter += total_len; remain_buf_len -= total_len;
-		total_len = tlv_raw_append(pHandle->head_buf, remain_buf_len, TAG_SFILE_MODE, pHandle->sfile_array[i].file_mode, sizeof(pHandle->sfile_array[i].file_mode), iter); iter += total_len; remain_buf_len -= total_len;
+		int total_len = tlv_raw_append(pHandle->head_buf, (int)remain_buf_len, (uint16_t)TAG_SFILE_PATH, (void *)pHandle->sfile_array[i].file_path, (uint16_t)strlen(pHandle->sfile_array[i].file_path), iter); iter += total_len; remain_buf_len -= total_len;
+		total_len = tlv_raw_append(pHandle->head_buf, (int)remain_buf_len, (uint16_t)TAG_SFILE_SIZE, (void *)&pHandle->sfile_array[i].file_size, (uint16_t)sizeof(pHandle->sfile_array[i].file_size), iter); iter += total_len; remain_buf_len -= total_len;
+		total_len = tlv_raw_append(pHandle->head_buf, (int)remain_buf_len, (uint16_t)TAG_SFILE_MODE, (void *)&pHandle->sfile_array[i].file_mode, (uint16_t)sizeof(pHandle->sfile_array[i].file_mode), iter); iter += total_len; remain_buf_len -= total_len;
 	}
 }
 
@@ -499,6 +508,7 @@ MFILE *mfopen(const struct mfopen_context *context, const char *mode)
 	pHandle->pThreadPoll = NULL;
 	pHandle->is_open = 1;
 	pthread_mutex_init(&pHandle->session_lock, NULL);
+	int i = 0;
 	if (pHandle->op == 0)//read
 	{
 		pHandle->sfile_array = (struct sfile *)malloc(sizeof(struct sfile) * pHandle->sfile_num);
@@ -506,7 +516,7 @@ MFILE *mfopen(const struct mfopen_context *context, const char *mode)
 		{
 			return NULL;
 		}
-		for (int i = 0; i < context->sfile_num; i++)
+		for (i = 0; i < context->sfile_num; i++)
 		{
 			strncpy(pHandle->sfile_array[i].file_abs, context->sfile_array[i].file_abs, PATH_LEN_MAX);
 			pHandle->sfile_array[i].file_abs[PATH_LEN_MAX - 1] = '\0';
@@ -529,7 +539,7 @@ MFILE *mfopen(const struct mfopen_context *context, const char *mode)
 		{
 			return NULL;
 		}
-		for (int i = 0; i < pHandle->unzip_num; i++)
+		for (i = 0; i < pHandle->unzip_num; i++)
 		{
 			memset(pHandle->uzip_param_array[i].src_path, 0, sizeof(pHandle->uzip_param_array[i].src_path));
 			memset(pHandle->uzip_param_array[i].unzip_path, 0, sizeof(pHandle->uzip_param_array[i].unzip_path));
@@ -543,7 +553,7 @@ MFILE *mfopen(const struct mfopen_context *context, const char *mode)
 			return NULL;
 		}
 	}
-	return pHandle;
+	return (void *)pHandle;
 }
 
 int mfclose(MFILE *stream)
@@ -594,6 +604,7 @@ int mfseek(MFILE *stream, long offset, int whence)
 		return -1;
 	}
 	int ret = -1;
+	int i = 0;
 	struct mfile_session *pHandle = (struct mfile_session *)stream;
 	if (pHandle->op == 0)//read
 	{
@@ -612,12 +623,12 @@ int mfseek(MFILE *stream, long offset, int whence)
 		}
 		uint64_t cur_offset = pHandle->head_size;
 		uint64_t slide_window = pHandle->head_size;
-		for (int i = 0; i < pHandle->sfile_num; i++)
+		for (i = 0; i < pHandle->sfile_num; i++)
 		{
 			slide_window += pHandle->sfile_array[i].file_size;
 			if (offset < slide_window)
 			{
-				int tmp_offset = pHandle->sfile_array[i].file_size - (slide_window - offset);
+				uint64_t tmp_offset = pHandle->sfile_array[i].file_size - (slide_window - offset);
 				if (pHandle->cur_offset < slide_window - pHandle->sfile_array[i].file_size || pHandle->cur_offset >= slide_window)
 				{
 					if (pHandle->fp != NULL)
@@ -679,17 +690,18 @@ int mfread(void *ptr, size_t size, size_t nmemb, MFILE *stream)
 		return -1;
 	}
 	int ret = -1;
+	int i = 0;
 	int read_size = 0;
 	struct mfile_session *pHandle = (struct mfile_session *)stream;
 	if (pHandle->op == 0)//read
 	{
-		uint64_t cnt = nmemb * size;
+		int cnt = nmemb * size;
 		if (pHandle->cur_offset < pHandle->head_size)
 		{
 			ret = cnt;
 			if (pHandle->cur_offset + cnt > pHandle->head_size)
 			{
-				ret = pHandle->head_size - pHandle->cur_offset;
+				ret = (int)(pHandle->head_size - pHandle->cur_offset);
 			}
 			memcpy(ptr, pHandle->head_buf + pHandle->cur_offset, ret);
 			pHandle->cur_offset += ret;
@@ -714,7 +726,7 @@ int mfread(void *ptr, size_t size, size_t nmemb, MFILE *stream)
 			cnt = cnt - ret;
 		}
 		uint64_t slide_window = pHandle->head_size;
-		for (int i = 0; i < pHandle->sfile_num; i++)
+		for (i = 0; i < pHandle->sfile_num; i++)
 		{
 			if (pHandle->cur_offset == slide_window)
 			{

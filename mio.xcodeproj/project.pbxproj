@@ -1,0 +1,299 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		221BA31920C694D400A56C15 /* config.h in Headers */ = {isa = PBXBuildFile; fileRef = 221BA31020C694D400A56C15 /* config.h */; };
+		221BA31A20C694D400A56C15 /* file.c in Sources */ = {isa = PBXBuildFile; fileRef = 221BA31120C694D400A56C15 /* file.c */; };
+		221BA31B20C694D400A56C15 /* file.h in Headers */ = {isa = PBXBuildFile; fileRef = 221BA31220C694D400A56C15 /* file.h */; };
+		221BA31C20C694D400A56C15 /* mio.c in Sources */ = {isa = PBXBuildFile; fileRef = 221BA31320C694D400A56C15 /* mio.c */; };
+		221BA31D20C694D400A56C15 /* mio.h in Headers */ = {isa = PBXBuildFile; fileRef = 221BA31420C694D400A56C15 /* mio.h */; };
+		221BA31E20C694D400A56C15 /* threadpoll.c in Sources */ = {isa = PBXBuildFile; fileRef = 221BA31520C694D400A56C15 /* threadpoll.c */; };
+		221BA31F20C694D400A56C15 /* threadpoll.h in Headers */ = {isa = PBXBuildFile; fileRef = 221BA31620C694D400A56C15 /* threadpoll.h */; };
+		221BA32020C694D400A56C15 /* tlv.c in Sources */ = {isa = PBXBuildFile; fileRef = 221BA31720C694D400A56C15 /* tlv.c */; };
+		221BA32120C694D400A56C15 /* tlv.h in Headers */ = {isa = PBXBuildFile; fileRef = 221BA31820C694D400A56C15 /* tlv.h */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		221BA31020C694D400A56C15 /* config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = config.h; sourceTree = SOURCE_ROOT; };
+		221BA31120C694D400A56C15 /* file.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = file.c; sourceTree = SOURCE_ROOT; };
+		221BA31220C694D400A56C15 /* file.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = file.h; sourceTree = SOURCE_ROOT; };
+		221BA31320C694D400A56C15 /* mio.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mio.c; sourceTree = SOURCE_ROOT; };
+		221BA31420C694D400A56C15 /* mio.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mio.h; sourceTree = SOURCE_ROOT; };
+		221BA31520C694D400A56C15 /* threadpoll.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = threadpoll.c; sourceTree = SOURCE_ROOT; };
+		221BA31620C694D400A56C15 /* threadpoll.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = threadpoll.h; sourceTree = SOURCE_ROOT; };
+		221BA31720C694D400A56C15 /* tlv.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tlv.c; sourceTree = SOURCE_ROOT; };
+		221BA31820C694D400A56C15 /* tlv.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tlv.h; sourceTree = SOURCE_ROOT; };
+		22BD4F3D20C690EF00AE5B69 /* libmio.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libmio.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		22BD4F3A20C690EF00AE5B69 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		22BD4F3420C690EF00AE5B69 = {
+			isa = PBXGroup;
+			children = (
+				22BD4F3F20C690EF00AE5B69 /* mio */,
+				22BD4F3E20C690EF00AE5B69 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		22BD4F3E20C690EF00AE5B69 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				22BD4F3D20C690EF00AE5B69 /* libmio.dylib */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		22BD4F3F20C690EF00AE5B69 /* mio */ = {
+			isa = PBXGroup;
+			children = (
+				221BA31020C694D400A56C15 /* config.h */,
+				221BA31120C694D400A56C15 /* file.c */,
+				221BA31220C694D400A56C15 /* file.h */,
+				221BA31320C694D400A56C15 /* mio.c */,
+				221BA31420C694D400A56C15 /* mio.h */,
+				221BA31520C694D400A56C15 /* threadpoll.c */,
+				221BA31620C694D400A56C15 /* threadpoll.h */,
+				221BA31720C694D400A56C15 /* tlv.c */,
+				221BA31820C694D400A56C15 /* tlv.h */,
+			);
+			path = mio;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		22BD4F3B20C690EF00AE5B69 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				221BA31D20C694D400A56C15 /* mio.h in Headers */,
+				221BA31F20C694D400A56C15 /* threadpoll.h in Headers */,
+				221BA31B20C694D400A56C15 /* file.h in Headers */,
+				221BA31920C694D400A56C15 /* config.h in Headers */,
+				221BA32120C694D400A56C15 /* tlv.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		22BD4F3C20C690EF00AE5B69 /* mio */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 22BD4F4620C690EF00AE5B69 /* Build configuration list for PBXNativeTarget "mio" */;
+			buildPhases = (
+				22BD4F3920C690EF00AE5B69 /* Sources */,
+				22BD4F3A20C690EF00AE5B69 /* Frameworks */,
+				22BD4F3B20C690EF00AE5B69 /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = mio;
+			productName = mio;
+			productReference = 22BD4F3D20C690EF00AE5B69 /* libmio.dylib */;
+			productType = "com.apple.product-type.library.dynamic";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		22BD4F3520C690EF00AE5B69 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0830;
+				ORGANIZATIONNAME = caton;
+				TargetAttributes = {
+					22BD4F3C20C690EF00AE5B69 = {
+						CreatedOnToolsVersion = 8.3.3;
+						DevelopmentTeam = XMAW2G64G8;
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 22BD4F3820C690EF00AE5B69 /* Build configuration list for PBXProject "mio" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 22BD4F3420C690EF00AE5B69;
+			productRefGroup = 22BD4F3E20C690EF00AE5B69 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				22BD4F3C20C690EF00AE5B69 /* mio */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		22BD4F3920C690EF00AE5B69 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				221BA32020C694D400A56C15 /* tlv.c in Sources */,
+				221BA31E20C694D400A56C15 /* threadpoll.c in Sources */,
+				221BA31A20C694D400A56C15 /* file.c in Sources */,
+				221BA31C20C694D400A56C15 /* mio.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		22BD4F4420C690EF00AE5B69 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		22BD4F4520C690EF00AE5B69 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		22BD4F4720C690EF00AE5B69 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEVELOPMENT_TEAM = XMAW2G64G8;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				EXECUTABLE_PREFIX = lib;
+				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/../../";
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		22BD4F4820C690EF00AE5B69 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEVELOPMENT_TEAM = XMAW2G64G8;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				EXECUTABLE_PREFIX = lib;
+				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/../../";
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		22BD4F3820C690EF00AE5B69 /* Build configuration list for PBXProject "mio" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				22BD4F4420C690EF00AE5B69 /* Debug */,
+				22BD4F4520C690EF00AE5B69 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		22BD4F4620C690EF00AE5B69 /* Build configuration list for PBXNativeTarget "mio" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				22BD4F4720C690EF00AE5B69 /* Debug */,
+				22BD4F4820C690EF00AE5B69 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 22BD4F3520C690EF00AE5B69 /* Project object */;
+}
