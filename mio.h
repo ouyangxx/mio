@@ -40,7 +40,7 @@ struct mfopen_context
 };
 
 MIO_API MFILE *mfopen(const struct mfopen_context *context, const char *mode);
-MIO_API int mfclose(MFILE *fp);
+MIO_API int mfclose(MFILE *stream);
 MIO_API int mfseek(MFILE *stream, long offset, int whence);
 MIO_API int mfread(void *ptr, size_t size, size_t nmemb, MFILE *stream);
 MIO_API size_t mfwrite(const void *ptr, size_t size, size_t nmeb, MFILE *stream);

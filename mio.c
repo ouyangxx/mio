@@ -213,72 +213,6 @@ STATIC void append_unzip_param(struct mfile_session *pHandle, struct unzip_param
 	pHandle->unzip_num = unzip_num;
 }
 
-STATIC void count_head_size(struct mfile_session *pHandle)
-{
-	if (NULL == pHandle)
-	{
-		return;
-	}
-	pHandle->head_size = 0;
-	pHandle->head_size += sizeof(pHandle->file_type);
-	pHandle->head_size += sizeof(pHandle->sfile_num);
-	for (int i = 0; i < pHandle->sfile_num; i++)
-	{
-		pHandle->head_size += sizeof(uint16_t);
-		pHandle->head_size += sizeof(uint16_t);
-
-		pHandle->head_size += sizeof(uint16_t);
-		pHandle->head_size += sizeof(uint16_t);
-		pHandle->head_size += TLV_PAD(strlen(pHandle->sfile_array[i].file_path));
-
-		pHandle->head_size += sizeof(uint16_t);
-		pHandle->head_size += sizeof(uint16_t);
-		pHandle->head_size += TLV_PAD(sizeof(pHandle->sfile_array[i].file_size));
-
-		pHandle->head_size += sizeof(uint16_t);
-		pHandle->head_size += sizeof(uint16_t);
-		pHandle->head_size += TLV_PAD(sizeof(pHandle->sfile_array[i].file_mode));
-	}
-}
-
-STATIC void load_head(struct mfile_session *pHandle)
-{
-	if (NULL == pHandle)
-	{
-		return;
-	}
-	count_head_size(pHandle);
-	pHandle->head_buf = (uint8_t *)malloc(sizeof(uint8_t) * pHandle->head_size);
-	if (NULL == pHandle->head_buf)
-	{
-		return;
-	}
-	uint64_t remain_buf_len = pHandle->head_size;
-	int iter = 0;
-	*(uint32_t *)(pHandle->head_buf + iter) = htons(pHandle->file_type); iter += sizeof(uint32_t); remain_buf_len -= sizeof(uint32_t);
-	*(uint32_t *)(pHandle->head_buf + iter) = htons(pHandle->sfile_num); iter += sizeof(uint32_t); remain_buf_len -= sizeof(uint32_t);
-	for (int i = 0; i < pHandle->sfile_num; i++)
-	{
-		uint16_t sfile_head_type = TAG_SFILE_HEAD;
-		uint16_t sfile_head_len = 0;
-		sfile_head_len += sizeof(uint16_t);
-		sfile_head_len += sizeof(uint16_t);
-		sfile_head_len += TLV_PAD(strlen(pHandle->sfile_array[i].file_path));
-		sfile_head_len += sizeof(uint16_t);
-		sfile_head_len += sizeof(uint16_t);
-		sfile_head_len += TLV_PAD(sizeof(pHandle->sfile_array[i].file_size));
-		sfile_head_len += sizeof(uint16_t);
-		sfile_head_len += sizeof(uint16_t);
-		sfile_head_len += TLV_PAD(sizeof(pHandle->sfile_array[i].file_mode));
-
-		*(uint16_t *)(pHandle->head_buf + iter) = htons(sfile_head_type); iter += sizeof(uint16_t); remain_buf_len -= sizeof(uint16_t);
-		*(uint16_t *)(pHandle->head_buf + iter) = htons(sfile_head_len); iter += sizeof(uint16_t); remain_buf_len -= sizeof(uint16_t);
-		int total_len = tlv_raw_append(pHandle->head_buf, remain_buf_len, TAG_SFILE_PATH, pHandle->sfile_array[i].file_path, strlen(pHandle->sfile_array[i].file_path), iter); iter += total_len; remain_buf_len -= total_len;
-		total_len = tlv_raw_append(pHandle->head_buf, remain_buf_len, TAG_SFILE_SIZE, pHandle->sfile_array[i].file_size, sizeof(pHandle->sfile_array[i].file_size), iter); iter += total_len; remain_buf_len -= total_len;
-		total_len = tlv_raw_append(pHandle->head_buf, remain_buf_len, TAG_SFILE_MODE, pHandle->sfile_array[i].file_mode, sizeof(pHandle->sfile_array[i].file_mode), iter); iter += total_len; remain_buf_len -= total_len;
-	}
-}
-
 STATIC void unzip_latest_sfile(struct mfile_session *pHandle)
 {
 	if (NULL == pHandle)
@@ -428,7 +362,7 @@ STATIC void unzip_latest_sfile(struct mfile_session *pHandle)
 					char download_path[PATH_LEN_MAX];
 					path_removeSuffix(pHandle->download_path, download_path, sizeof(download_path));
 					char file_path[PATH_LEN_MAX];
-					path_AddPrefix(pHandle->sfile_array[j].file_path, file_path, sizeof(file_path));
+					path_addPrefix(pHandle->sfile_array[j].file_path, file_path, sizeof(file_path));
 					char unzip_path[PATH_LEN_MAX];
 					memset(unzip_path, 0, sizeof(unzip_path));
 					sprintf(unzip_path, "%s%s", download_path, file_path);
@@ -470,6 +404,72 @@ STATIC void unzip_latest_sfile(struct mfile_session *pHandle)
 	}
 }
 
+STATIC void count_head_size(struct mfile_session *pHandle)
+{
+	if (NULL == pHandle)
+	{
+		return;
+	}
+	pHandle->head_size = 0;
+	pHandle->head_size += sizeof(pHandle->file_type);
+	pHandle->head_size += sizeof(pHandle->sfile_num);
+	for (int i = 0; i < pHandle->sfile_num; i++)
+	{
+		pHandle->head_size += sizeof(uint16_t);
+		pHandle->head_size += sizeof(uint16_t);
+
+		pHandle->head_size += sizeof(uint16_t);
+		pHandle->head_size += sizeof(uint16_t);
+		pHandle->head_size += TLV_PAD(strlen(pHandle->sfile_array[i].file_path));
+
+		pHandle->head_size += sizeof(uint16_t);
+		pHandle->head_size += sizeof(uint16_t);
+		pHandle->head_size += TLV_PAD(sizeof(pHandle->sfile_array[i].file_size));
+
+		pHandle->head_size += sizeof(uint16_t);
+		pHandle->head_size += sizeof(uint16_t);
+		pHandle->head_size += TLV_PAD(sizeof(pHandle->sfile_array[i].file_mode));
+	}
+}
+
+STATIC void load_head(struct mfile_session *pHandle)
+{
+	if (NULL == pHandle)
+	{
+		return;
+	}
+	count_head_size(pHandle);
+	pHandle->head_buf = (uint8_t *)malloc(sizeof(uint8_t)* pHandle->head_size);
+	if (NULL == pHandle->head_buf)
+	{
+		return;
+	}
+	uint64_t remain_buf_len = pHandle->head_size;
+	int iter = 0;
+	*(uint32_t *)(pHandle->head_buf + iter) = htons(pHandle->file_type); iter += sizeof(uint32_t); remain_buf_len -= sizeof(uint32_t);
+	*(uint32_t *)(pHandle->head_buf + iter) = htons(pHandle->sfile_num); iter += sizeof(uint32_t); remain_buf_len -= sizeof(uint32_t);
+	for (int i = 0; i < pHandle->sfile_num; i++)
+	{
+		uint16_t sfile_head_type = TAG_SFILE_HEAD;
+		uint16_t sfile_head_len = 0;
+		sfile_head_len += sizeof(uint16_t);
+		sfile_head_len += sizeof(uint16_t);
+		sfile_head_len += TLV_PAD(strlen(pHandle->sfile_array[i].file_path));
+		sfile_head_len += sizeof(uint16_t);
+		sfile_head_len += sizeof(uint16_t);
+		sfile_head_len += TLV_PAD(sizeof(pHandle->sfile_array[i].file_size));
+		sfile_head_len += sizeof(uint16_t);
+		sfile_head_len += sizeof(uint16_t);
+		sfile_head_len += TLV_PAD(sizeof(pHandle->sfile_array[i].file_mode));
+
+		*(uint16_t *)(pHandle->head_buf + iter) = htons(sfile_head_type); iter += sizeof(uint16_t); remain_buf_len -= sizeof(uint16_t);
+		*(uint16_t *)(pHandle->head_buf + iter) = htons(sfile_head_len); iter += sizeof(uint16_t); remain_buf_len -= sizeof(uint16_t);
+		int total_len = tlv_raw_append(pHandle->head_buf, remain_buf_len, TAG_SFILE_PATH, pHandle->sfile_array[i].file_path, strlen(pHandle->sfile_array[i].file_path), iter); iter += total_len; remain_buf_len -= total_len;
+		total_len = tlv_raw_append(pHandle->head_buf, remain_buf_len, TAG_SFILE_SIZE, pHandle->sfile_array[i].file_size, sizeof(pHandle->sfile_array[i].file_size), iter); iter += total_len; remain_buf_len -= total_len;
+		total_len = tlv_raw_append(pHandle->head_buf, remain_buf_len, TAG_SFILE_MODE, pHandle->sfile_array[i].file_mode, sizeof(pHandle->sfile_array[i].file_mode), iter); iter += total_len; remain_buf_len -= total_len;
+	}
+}
+
 MFILE *mfopen(const struct mfopen_context *context, const char *mode)
 {
 	if (NULL == context || NULL == mode)
@@ -489,16 +489,23 @@ MFILE *mfopen(const struct mfopen_context *context, const char *mode)
 	pHandle->op = context->op;
 	strncpy(pHandle->path, context->path, PATH_LEN_MAX);
 	pHandle->path[PATH_LEN_MAX - 1] = '\0';
+	strncpy(pHandle->download_path, context->download_path, PATH_LEN_MAX);
+	pHandle->download_path[PATH_LEN_MAX - 1] = '\0';
 	pHandle->fp = NULL;
 	pHandle->cur_offset = 0;
+	pHandle->latest_write_len = 0;
 	pHandle->uzip_param_array = NULL;
 	pHandle->unzip_num = 0;
 	pHandle->pThreadPoll = NULL;
 	pHandle->is_open = 1;
 	pthread_mutex_init(&pHandle->session_lock, NULL);
-	if (pHandle->op == 0)
+	if (pHandle->op == 0)//read
 	{
 		pHandle->sfile_array = (struct sfile *)malloc(sizeof(struct sfile) * pHandle->sfile_num);
+		if (NULL == pHandle->sfile_array)
+		{
+			return NULL;
+		}
 		for (int i = 0; i < context->sfile_num; i++)
 		{
 			strncpy(pHandle->sfile_array[i].file_abs, context->sfile_array[i].file_abs, PATH_LEN_MAX);
@@ -510,7 +517,7 @@ MFILE *mfopen(const struct mfopen_context *context, const char *mode)
 		}
 		load_head(pHandle);
 	}
-	else
+	else if (pHandle->op == 1)//write
 	{
 		pHandle->unzip_num = DEFAULT_UNZIP_NUM;
 		if (pHandle->unzip_num > pHandle->sfile_num)
@@ -518,6 +525,10 @@ MFILE *mfopen(const struct mfopen_context *context, const char *mode)
 			pHandle->unzip_num = pHandle->sfile_num;
 		}
 		pHandle->uzip_param_array = (struct unzip_param *)malloc(sizeof(struct unzip_param) * pHandle->unzip_num);
+		if (NULL == pHandle->uzip_param_array)
+		{
+			return NULL;
+		}
 		for (int i = 0; i < pHandle->unzip_num; i++)
 		{
 			memset(pHandle->uzip_param_array[i].src_path, 0, sizeof(pHandle->uzip_param_array[i].src_path));
@@ -526,17 +537,22 @@ MFILE *mfopen(const struct mfopen_context *context, const char *mode)
 			pHandle->uzip_param_array[i].unzip_len = 0;
 		}
 		pHandle->pThreadPoll = threadpoll_create(2, MAX_THREAD_NUM, MAX_TASK_SIZE);
+		pHandle->fp = file_open(context->path, mode);
+		if (NULL == pHandle->fp)
+		{
+			return NULL;
+		}
 	}
 	return pHandle;
 }
 
-int mfclose(MFILE *fp)
+int mfclose(MFILE *stream)
 {
-	if (NULL == fp)
+	if (NULL == stream)
 	{
 		return -1;
 	}
-	struct mfile_session *pHandle = (struct mfile_session *)fp;
+	struct mfile_session *pHandle = (struct mfile_session *)stream;
 	pthread_mutex_lock(&pHandle->session_lock);
 	pHandle->is_open = 0;
 	pthread_mutex_unlock(&pHandle->session_lock);
@@ -573,15 +589,198 @@ int mfclose(MFILE *fp)
 
 int mfseek(MFILE *stream, long offset, int whence)
 {
-	return 0;
+	if (NULL == stream)
+	{
+		return -1;
+	}
+	int ret = -1;
+	struct mfile_session *pHandle = (struct mfile_session *)stream;
+	if (pHandle->op == 0)//read
+	{
+		if (offset < pHandle->head_size)
+		{
+			if (pHandle->cur_offset >= pHandle->head_size)
+			{
+				if (pHandle->fp != NULL)
+				{
+					fclose(pHandle->fp);
+					pHandle->fp = NULL;
+				}
+			}
+			pHandle->cur_offset = offset;
+			return 0;
+		}
+		uint64_t cur_offset = pHandle->head_size;
+		uint64_t slide_window = pHandle->head_size;
+		for (int i = 0; i < pHandle->sfile_num; i++)
+		{
+			slide_window += pHandle->sfile_array[i].file_size;
+			if (offset < slide_window)
+			{
+				int tmp_offset = pHandle->sfile_array[i].file_size - (slide_window - offset);
+				if (pHandle->cur_offset < slide_window - pHandle->sfile_array[i].file_size || pHandle->cur_offset >= slide_window)
+				{
+					if (pHandle->fp != NULL)
+					{
+						fclose(pHandle->fp);
+						pHandle->fp = NULL;
+					}
+					pHandle->fp = file_open(pHandle->sfile_array[i].file_abs, "rb");
+					if (NULL == pHandle->fp)
+					{
+						return -1;
+					}
+				}
+				uint64_t off = 0;
+				#ifdef WIN32
+				ret = fseeko64(pHandle->fp, tmp_offset, SEEK_SET);
+				off = ftello64(pHandle->fp);
+				#else
+				ret = fseeko(pHandle->fp, tmp_offset, SEEK_SET);
+				off = ftello(pHandle->fp);
+				#endif
+				if (ret < 0)
+				{
+					return -1;
+				}
+				cur_offset += off;
+				break;
+			}
+			cur_offset += pHandle->sfile_array[i].file_size;
+		}
+		pHandle->cur_offset = cur_offset;
+		ret = 0;
+	}	
+	else if (pHandle->op == 1)//write
+	{
+		uint64_t off = 0;
+		#ifdef WIN32
+		ret = fseeko64(pHandle->fp, offset, SEEK_SET);
+		off = ftello64(pHandle->fp);
+		#else
+		ret = fseeko(pHandle->fp, offset, SEEK_SET);
+		off = ftello(pHandle->fp);
+		#endif
+		if (ret < 0)
+		{
+			return -1;
+		}
+		pHandle->cur_offset = off;
+		pHandle->latest_write_len = off;
+		unzip_latest_sfile(pHandle);
+	}
+	return ret;
 }
 
 int mfread(void *ptr, size_t size, size_t nmemb, MFILE *stream)
 {
-	return 0;
+	if (NULL == stream)
+	{
+		return -1;
+	}
+	int ret = -1;
+	int read_size = 0;
+	struct mfile_session *pHandle = (struct mfile_session *)stream;
+	if (pHandle->op == 0)//read
+	{
+		uint64_t cnt = nmemb * size;
+		if (pHandle->cur_offset < pHandle->head_size)
+		{
+			ret = cnt;
+			if (pHandle->cur_offset + cnt > pHandle->head_size)
+			{
+				ret = pHandle->head_size - pHandle->cur_offset;
+			}
+			memcpy(ptr, pHandle->head_buf + pHandle->cur_offset, ret);
+			pHandle->cur_offset += ret;
+			read_size += ret;
+			if (cnt - ret == 0)
+			{
+				if (pHandle->cur_offset == pHandle->head_size && pHandle->sfile_num > 0)
+				{
+					if (pHandle->fp != NULL)
+					{
+						fclose(pHandle->fp);
+						pHandle->fp = NULL;
+					}
+					pHandle->fp = file_open(pHandle->sfile_array[0].file_abs, "rb");
+					if (NULL == pHandle->fp)
+					{
+						return -1;
+					}
+				}
+				return read_size;
+			}
+			cnt = cnt - ret;
+		}
+		uint64_t slide_window = pHandle->head_size;
+		for (int i = 0; i < pHandle->sfile_num; i++)
+		{
+			if (pHandle->cur_offset == slide_window)
+			{
+				if (pHandle->fp != NULL)
+				{
+					fclose(pHandle->fp);
+					pHandle->fp = NULL;
+				}
+				pHandle->fp = file_open(pHandle->sfile_array[i].file_abs, "rb");
+				if (NULL == pHandle->fp)
+				{
+					return -1;
+				}
+			}
+			slide_window += pHandle->sfile_array[i].file_size;
+			if (pHandle->cur_offset < slide_window)
+			{
+				ret = fread(ptr, 1, cnt, pHandle->fp);
+				if (ret < 0)
+				{
+					return -1;
+				}
+				pHandle->cur_offset += ret;
+				read_size += ret;
+				if (cnt - ret == 0)
+				{
+					if (pHandle->cur_offset == slide_window && (i + 1) < pHandle->sfile_num)
+					{
+						if (pHandle->fp != NULL)
+						{
+							fclose(pHandle->fp);
+							pHandle->fp = NULL;
+						}
+						pHandle->fp = file_open(pHandle->sfile_array[i+1].file_abs, "rb");
+						if (NULL == pHandle->fp)
+						{
+							return -1;
+						}
+					}
+					return read_size;
+				}
+				cnt = cnt - ret;
+			}
+		}
+	}
+	return ret;
 }
 
 size_t mfwrite(const void *ptr, size_t size, size_t nmeb, MFILE *stream)
 {
-	return 0;
+	if (NULL == stream)
+	{
+		return -1;
+	}
+	int ret = -1;
+	struct mfile_session *pHandle = (struct mfile_session *)stream;
+	if (pHandle->op == 1)//write
+	{
+		ret = fwrite(ptr, 1, nmeb * size, pHandle->fp);
+		if (ret < 0)
+		{
+			return -1;
+		}
+		pHandle->cur_offset += ret;
+		pHandle->latest_write_len += ret;
+		unzip_latest_sfile(pHandle);
+	}
+	return ret;
 }
