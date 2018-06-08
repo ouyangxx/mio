@@ -1,4 +1,4 @@
-﻿Build started 2018/6/5 17:56:54.
+﻿Build started 2018/6/8 18:34:44.
      1>Project "F:\cydex.data\mio\winbuild\mio.vcxproj" on node 2 (Rebuild target(s)).
      1>ClCompile:
          D:\Program Files\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /Ipthread\include /I..\ /I"D:\Program Files (x86)\Visual Leak Detector\include" /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _USRDLL /D MIO_EXPORTS /D WIN32_LEAN_AND_MEAN /D _WINDLL /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TC /analyze- /errorReport:prompt ..\file.c ..\mio.c ..\threadpoll.c ..\tlv.c
@@ -42,19 +42,20 @@
                  d:\program files\microsoft visual studio 12.0\vc\include\string.h(195) : see declaration of 'strncpy'
      1>f:\cydex.data\mio\mio.c(424): warning C4018: '<' : signed/unsigned mismatch
      1>f:\cydex.data\mio\mio.c(460): warning C4018: '<' : signed/unsigned mismatch
-     1>f:\cydex.data\mio\mio.c(499): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+     1>f:\cydex.data\mio\mio.c(492): warning C4018: '<' : signed/unsigned mismatch
+     1>f:\cydex.data\mio\mio.c(531): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
                  d:\program files\microsoft visual studio 12.0\vc\include\string.h(195) : see declaration of 'strncpy'
-     1>f:\cydex.data\mio\mio.c(501): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+     1>f:\cydex.data\mio\mio.c(533): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
                  d:\program files\microsoft visual studio 12.0\vc\include\string.h(195) : see declaration of 'strncpy'
-     1>f:\cydex.data\mio\mio.c(519): warning C4018: '<' : signed/unsigned mismatch
-     1>f:\cydex.data\mio\mio.c(521): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+     1>f:\cydex.data\mio\mio.c(551): warning C4018: '<' : signed/unsigned mismatch
+     1>f:\cydex.data\mio\mio.c(553): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
                  d:\program files\microsoft visual studio 12.0\vc\include\string.h(195) : see declaration of 'strncpy'
-     1>f:\cydex.data\mio\mio.c(523): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+     1>f:\cydex.data\mio\mio.c(555): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
                  d:\program files\microsoft visual studio 12.0\vc\include\string.h(195) : see declaration of 'strncpy'
-     1>f:\cydex.data\mio\mio.c(542): warning C4018: '<' : signed/unsigned mismatch
-     1>f:\cydex.data\mio\mio.c(626): warning C4018: '<' : signed/unsigned mismatch
-     1>f:\cydex.data\mio\mio.c(729): warning C4018: '<' : signed/unsigned mismatch
-     1>f:\cydex.data\mio\mio.c(756): warning C4018: '<' : signed/unsigned mismatch
+     1>f:\cydex.data\mio\mio.c(574): warning C4018: '<' : signed/unsigned mismatch
+     1>f:\cydex.data\mio\mio.c(658): warning C4018: '<' : signed/unsigned mismatch
+     1>f:\cydex.data\mio\mio.c(761): warning C4018: '<' : signed/unsigned mismatch
+     1>f:\cydex.data\mio\mio.c(788): warning C4018: '<' : signed/unsigned mismatch
          file.c
      1>f:\cydex.data\mio\file.c(34): warning C4996: 'wcscpy': This function or variable may be unsafe. Consider using wcscpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
                  d:\program files\microsoft visual studio 12.0\vc\include\string.h(294) : see declaration of 'wcscpy'
@@ -108,4 +109,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:01.06
+Time Elapsed 00:00:00.79

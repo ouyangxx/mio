@@ -479,6 +479,38 @@ STATIC void load_head(struct mfile_session *pHandle)
 	}
 }
 
+int64_t mfile_get_size(struct sfile *sfile_array, uint32_t sfile_num)
+{
+	if (NULL == sfile_array)
+	{
+		return 0;
+	}
+	int64_t countSize = 0;
+	int i = 0;
+	countSize += sizeof(uint32_t);
+	countSize += sizeof(uint32_t);
+	for (i = 0; i < sfile_num; i++)
+	{
+		countSize += sizeof(uint16_t);
+		countSize += sizeof(uint16_t);
+
+		countSize += sizeof(uint16_t);
+		countSize += sizeof(uint16_t);
+		countSize += TLV_PAD(strlen(sfile_array[i].file_path));
+
+		countSize += sizeof(uint16_t);
+		countSize += sizeof(uint16_t);
+		countSize += TLV_PAD(sizeof(sfile_array[i].file_size));
+
+		countSize += sizeof(uint16_t);
+		countSize += sizeof(uint16_t);
+		countSize += TLV_PAD(sizeof(sfile_array[i].file_mode));
+
+		countSize += sfile_array[i].file_size;
+	}
+	return countSize;
+}
+
 MFILE *mfopen(const struct mfopen_context *context, const char *mode)
 {
 	if (NULL == context || NULL == mode)
