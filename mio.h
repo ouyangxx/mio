@@ -39,7 +39,7 @@ struct mfopen_context
 	char download_path[PATH_LEN_MAX];
 };
 
-int64_t mfile_get_size(struct sfile *sfile_array, uint32_t sfile_num);
+MIO_API int64_t mfile_get_size(struct sfile *sfile_array, uint32_t sfile_num);
 MIO_API MFILE *mfopen(const struct mfopen_context *context, const char *mode);
 MIO_API int mfclose(MFILE *stream);
 MIO_API int mfseek(MFILE *stream, long offset, int whence);
