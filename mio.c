@@ -537,7 +537,7 @@ int64_t mfile_get_size(struct sfile *sfile_array, uint32_t sfile_num)
 	return countSize;
 }
 
-int mfile_unzip(const char *src_file, const char *dest_path)
+int mfile_unzip(const char *src_file, int64_t src_fileSize, const char *dest_path)
 {
 	int ret = -1;
 	int i = 0;
@@ -545,9 +545,6 @@ int mfile_unzip(const char *src_file, const char *dest_path)
 	uint32_t file_type = 0;
 	uint32_t sfile_num = 0;
 	struct sfile *sfile_array = NULL;
-	//int64_t fsize = 0;
-	//int64_t src_fsize = 0;
-	//file_size(src_file, &src_fsize);
 
 	FILE * fp_src = file_open(src_file, "rb");
 	if (NULL == fp_src)
@@ -662,7 +659,18 @@ int mfile_unzip(const char *src_file, const char *dest_path)
 
 		free(buf);
 	}
-	//fsize = mfile_get_size(sfile_array, sfile_num);
+	#ifdef WIN32
+	int64_t head_size = ftello64(fp_src);
+	#else
+	int64_t head_size = ftello(fp_src);
+	#endif
+	int64_t remain_size = src_fileSize - head_size;
+	if (remain_size <= 0)
+	{
+		free(sfile_array);
+		fclose(fp_src);
+		return ret;
+	}
 
 	ret = 0;
 	for (i = 0; i < sfile_num; i++)
@@ -704,13 +712,32 @@ int mfile_unzip(const char *src_file, const char *dest_path)
 			uint64_t unzip_cnt = 0;
 			while (unzip_cnt < sfile_array[i].file_size)
 			{
+				if (remain_size <= 0)
+				{
+					ret = -1;
+					break;
+				}
 				if (unzip_cnt + block_size < sfile_array[i].file_size)
 				{
-					cnt = fread(buf, 1, block_size, fp_src);
+					if (block_size <= remain_size)
+					{
+						cnt = fread(buf, 1, block_size, fp_src);
+					}
+					else
+					{
+						cnt = fread(buf, 1, remain_size, fp_src);
+					}
 				}
 				else
 				{
-					cnt = fread(buf, 1, sfile_array[i].file_size - unzip_cnt, fp_src);
+					if (sfile_array[i].file_size - unzip_cnt <= remain_size)
+					{
+						cnt = fread(buf, 1, sfile_array[i].file_size - unzip_cnt, fp_src);
+					}
+					else
+					{
+						cnt = fread(buf, 1, remain_size, fp_src);
+					}
 				}
 				if (cnt <= 0)
 				{
@@ -718,6 +745,7 @@ int mfile_unzip(const char *src_file, const char *dest_path)
 					break;
 				}
 				unzip_cnt += cnt;
+				remain_size -= cnt;
 				fwrite(buf, 1, cnt, fp_dest);
 				memset(buf, 0, sizeof(buf));
 			}
@@ -725,20 +753,29 @@ int mfile_unzip(const char *src_file, const char *dest_path)
 		}
 		else
 		{
-			#ifdef WIN32
-			ret = fseeko64(fp_src, sfile_array[i].file_size, SEEK_CUR);
-			#else
-			ret = fseeko(fp_src, sfile_array[i].file_size, SEEK_CUR);
-			#endif
+			if (sfile_array[i].file_size <= remain_size)
+			{
+				#ifdef WIN32
+				ret = fseeko64(fp_src, sfile_array[i].file_size, SEEK_CUR);
+				#else
+				ret = fseeko(fp_src, sfile_array[i].file_size, SEEK_CUR);
+				#endif
+				if (ret == -1)
+				{
+					ret = -1;
+					break;
+				}
+				remain_size -= sfile_array[i].file_size;
+			}
+			else
+			{
+				ret = -1;
+				break;
+			}
 		}
 	}
 	free(sfile_array);
 	fclose(fp_src);
-
-	//if (src_fsize == fsize)
-	//{
-	//	file_remove(src_file);
-	//}
 	return ret;
 }
 
@@ -810,7 +847,7 @@ STATIC void auto_unzip(MFILE *stream)
 	}
 	struct mfile_session *pHandle = (struct mfile_session *)stream;
 	fflush(pHandle->fp);
-	mfile_unzip(pHandle->path, pHandle->download_path);
+	mfile_unzip(pHandle->path, pHandle->cur_offset, pHandle->download_path);
 }
 
 int mfclose(MFILE *stream)
