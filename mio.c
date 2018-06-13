@@ -645,7 +645,7 @@ int mfile_unzip(const char *src_file, const char *dest_path)
 			fclose(fp_src);
 			return ret;
 		}
-		sfile_array[i].file_size = *((uint16_t *)tlv.value);
+		sfile_array[i].file_size = *((uint64_t *)tlv.value);
 		iter += tlv.total_len;
 
 		tlv_init(&tlv);
@@ -657,7 +657,7 @@ int mfile_unzip(const char *src_file, const char *dest_path)
 			fclose(fp_src);
 			return ret;
 		}
-		sfile_array[i].file_mode = *((uint16_t *)tlv.value);
+		sfile_array[i].file_mode = *((uint32_t *)tlv.value);
 		iter += tlv.total_len;
 
 		free(buf);
