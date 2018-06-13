@@ -1,4 +1,4 @@
-﻿Build started 2018/6/13 14:35:02.
+﻿Build started 2018/6/13 14:48:27.
      1>Project "F:\cydex.data\mio\winbuild\mio.vcxproj" on node 2 (Rebuild target(s)).
      1>ClCompile:
          D:\Program Files\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /Ipthread\include /I..\ /I"D:\Program Files (x86)\Visual Leak Detector\include" /Zi /nologo /W3 /WX- /O2 /Oi /Oy- /GL /D WIN32 /D NDEBUG /D _WINDOWS /D _USRDLL /D MIO_EXPORTS /D WIN32_LEAN_AND_MEAN /D _WINDLL /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc120.pdb" /Gd /TC /analyze- /errorReport:prompt ..\file.c ..\mio.c ..\threadpoll.c ..\tlv.c
@@ -88,9 +88,9 @@
                  D:\Program Files\Microsoft Visual Studio 12.0\VC\include\string.h(195) : see declaration of 'strncpy'
      1>..\mio.c(786): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
                  D:\Program Files\Microsoft Visual Studio 12.0\VC\include\string.h(195) : see declaration of 'strncpy'
-     1>..\mio.c(884): warning C4018: '<' : signed/unsigned mismatch
-     1>..\mio.c(987): warning C4018: '<' : signed/unsigned mismatch
-     1>..\mio.c(1014): warning C4018: '<' : signed/unsigned mismatch
+     1>..\mio.c(887): warning C4018: '<' : signed/unsigned mismatch
+     1>..\mio.c(990): warning C4018: '<' : signed/unsigned mismatch
+     1>..\mio.c(1017): warning C4018: '<' : signed/unsigned mismatch
          threadpoll.c
          tlv.c
      1>f:\cydex.data\mio\tlv.h : warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
@@ -107,4 +107,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:00.94
+Time Elapsed 00:00:00.73

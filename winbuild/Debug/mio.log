@@ -1,4 +1,4 @@
-﻿Build started 2018/6/13 14:34:22.
+﻿Build started 2018/6/13 14:48:22.
      1>Project "F:\cydex.data\mio\winbuild\mio.vcxproj" on node 2 (Rebuild target(s)).
      1>ClCompile:
          D:\Program Files\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /Ipthread\include /I..\ /I"D:\Program Files (x86)\Visual Leak Detector\include" /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _USRDLL /D MIO_EXPORTS /D WIN32_LEAN_AND_MEAN /D _WINDLL /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TC /analyze- /errorReport:prompt ..\file.c ..\mio.c ..\threadpoll.c ..\tlv.c
@@ -54,9 +54,9 @@
                  d:\program files\microsoft visual studio 12.0\vc\include\string.h(195) : see declaration of 'strncpy'
      1>f:\cydex.data\mio\mio.c(786): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
                  d:\program files\microsoft visual studio 12.0\vc\include\string.h(195) : see declaration of 'strncpy'
-     1>f:\cydex.data\mio\mio.c(884): warning C4018: '<' : signed/unsigned mismatch
-     1>f:\cydex.data\mio\mio.c(987): warning C4018: '<' : signed/unsigned mismatch
-     1>f:\cydex.data\mio\mio.c(1014): warning C4018: '<' : signed/unsigned mismatch
+     1>f:\cydex.data\mio\mio.c(887): warning C4018: '<' : signed/unsigned mismatch
+     1>f:\cydex.data\mio\mio.c(990): warning C4018: '<' : signed/unsigned mismatch
+     1>f:\cydex.data\mio\mio.c(1017): warning C4018: '<' : signed/unsigned mismatch
          file.c
      1>f:\cydex.data\mio\file.c(34): warning C4996: 'wcscpy': This function or variable may be unsafe. Consider using wcscpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
                  d:\program files\microsoft visual studio 12.0\vc\include\string.h(294) : see declaration of 'wcscpy'
@@ -110,4 +110,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:03.01
+Time Elapsed 00:00:01.42

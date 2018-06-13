@@ -819,8 +819,11 @@ int mfclose(MFILE *stream)
 	{
 		return -1;
 	}
-	auto_unzip(stream);
 	struct mfile_session *pHandle = (struct mfile_session *)stream;
+	if (pHandle->op == 1)//write
+	{
+		auto_unzip(stream);
+	}
 	pthread_mutex_lock(&pHandle->session_lock);
 	pHandle->is_open = 0;
 	pthread_mutex_unlock(&pHandle->session_lock);
