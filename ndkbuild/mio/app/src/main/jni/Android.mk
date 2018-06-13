@@ -1,0 +1,22 @@
+LOCAL_PATH:= $(call my-dir)
+
+include $(CLEAR_VARS)
+
+LOCAL_MODULE:=mio
+#LOCAL_CFLAGS += -DANDROID
+#LOCAL_CPPFLAGS:= -std=c++11
+LOCAL_DEPEND_PATH:=$(LOCAL_PATH)/../../../../../..
+LOCAL_TRUNK_PATH:=$(LOCAL_PATH)/../../../../../..
+
+LOCAL_LDLIBS:= 
+
+LOCAL_C_INCLUDES := \
+  $(LOCAL_TRUNK_PATH)
+
+LOCAL_SRC_FILES := \
+  $(LOCAL_TRUNK_PATH)/file.c \
+  $(LOCAL_TRUNK_PATH)/mio.c \
+  $(LOCAL_TRUNK_PATH)/threadpoll.c \
+  $(LOCAL_TRUNK_PATH)/tlv.c
+  
+include $(BUILD_SHARED_LIBRARY)

@@ -144,7 +144,7 @@ int isdir(const char *name)
 	return 0;
 }
 
-int forder_access(const char *name)
+int folder_access(const char *name)
 {
 	#ifdef WIN32
 	/* move last '/' to '\0' */
@@ -167,7 +167,7 @@ int forder_access(const char *name)
 	#endif
 }
 
-int forder_touch(const char *name, int mode)
+int folder_touch(const char *name, int mode)
 {
 	/* add '/' to last */
 	char dest_buf[PATH_BUF_LEN];
@@ -185,7 +185,7 @@ int forder_touch(const char *name, int mode)
 		strncat(onepath, save, strlen(save) - strlen(ptr + 1));
 		onepath[sizeof(onepath) - 1] = '\0';
 
-		if (forder_access(onepath) == -1)//not exist
+		if (folder_access(onepath) == -1)//not exist
 		{
 			#ifdef WIN32
 			wchar_t wonepath[sizeof(wchar_t)* PATH_BUF_LEN];

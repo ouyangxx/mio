@@ -16,8 +16,8 @@ int path_removeSuffix(const char *src, char *dest_buf, int size);//remove "/" at
 
 int isdir(const char *name);//1(yes), 0(no)
 
-int forder_access(const char *name);
-int forder_touch(const char *name, int mode);
+int folder_access(const char *name);
+int folder_touch(const char *name, int mode);
 
 int file_rename(const char *oldname, const char *newname);
 int file_remove(const char *name);

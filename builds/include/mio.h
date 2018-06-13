@@ -40,8 +40,10 @@ struct mfopen_context
 };
 
 MIO_API int64_t mfile_get_size(struct sfile *sfile_array, uint32_t sfile_num);
+MIO_API int mfile_unzip(const char *src_file, const char *dest_path);
+
 MIO_API MFILE *mfopen(const struct mfopen_context *context, const char *mode);
-MIO_API int mfclose(MFILE *stream);
+MIO_API int mfclose(MFILE *stream);//auto unzip
 MIO_API int mfseek(MFILE *stream, long offset, int whence);
 MIO_API int mfread(void *ptr, size_t size, size_t nmemb, MFILE *stream);
 MIO_API size_t mfwrite(const void *ptr, size_t size, size_t nmeb, MFILE *stream);
