@@ -233,7 +233,7 @@ STATIC void unzip_latest_sfile(struct mfile_session *pHandle)
 	int i = 0, j = 0;
 	if (pHandle->head_size == 0)
 	{
-		FILE * fp = fopen(pHandle->path, "rb");
+		FILE * fp = file_open(pHandle->path, "rb");
 		if (NULL == fp)
 		{
 			return;
@@ -549,7 +549,7 @@ int mfile_unzip(const char *src_file, const char *dest_path)
 	//int64_t src_fsize = 0;
 	//file_size(src_file, &src_fsize);
 
-	FILE * fp_src = fopen(src_file, "rb");
+	FILE * fp_src = file_open(src_file, "rb");
 	if (NULL == fp_src)
 	{
 		return ret;
