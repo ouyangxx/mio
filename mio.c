@@ -24,6 +24,23 @@
 #define FILE_MODE_DEFAULT   (00400 | 00200 | 00100 | 00040 | 00004) //0744
 #define DIR_MODE_DEFAULT	(00400 | 00200 | 00100 | 00040 | 00010 | 00004 | 00001) //0755
 
+int is_cancel_unzip = 0;
+pthread_mutex_t unzip_lock = PTHREAD_MUTEX_INITIALIZER;
+int is_cancel()
+{
+	pthread_mutex_lock(&unzip_lock);
+	int is_cancel = is_cancel_unzip;
+	pthread_mutex_unlock(&unzip_lock);
+	return is_cancel;
+}
+int mfile_cancel_unzip()
+{
+	pthread_mutex_lock(&unzip_lock);
+	is_cancel_unzip = 1;
+	pthread_mutex_unlock(&unzip_lock);
+	return 0;
+}
+
 struct mfile_session
 {
 	uint32_t file_type;
@@ -349,11 +366,11 @@ STATIC void unzip_latest_sfile(struct mfile_session *pHandle)
 
 			free(buf);
 		}
-#ifdef WIN32
+		#ifdef WIN32
 		pHandle->head_size = ftello64(fp);
-#else
+		#else
 		pHandle->head_size = ftello(fp);
-#endif
+		#endif
 		fclose(fp);
 		pHandle->file_type = file_type;
 		pHandle->sfile_num = sfile_num;
@@ -665,7 +682,7 @@ int mfile_unzip(const char *src_file, int64_t src_fileSize, const char *dest_pat
 	int64_t head_size = ftello(fp_src);
 	#endif
 	int64_t remain_size = src_fileSize - head_size;
-	if (remain_size <= 0)
+	if (remain_size <= 0 || is_cancel())
 	{
 		free(sfile_array);
 		fclose(fp_src);
@@ -712,7 +729,7 @@ int mfile_unzip(const char *src_file, int64_t src_fileSize, const char *dest_pat
 			uint64_t unzip_cnt = 0;
 			while (unzip_cnt < sfile_array[i].file_size)
 			{
-				if (remain_size <= 0)
+				if (remain_size <= 0 || is_cancel())
 				{
 					ret = -1;
 					break;
@@ -829,7 +846,7 @@ MFILE *mfopen(const struct mfopen_context *context, const char *mode)
 	}
 	else if (pHandle->op == 1)//write
 	{
-		pHandle->pThreadPoll = threadpoll_create(2, MAX_THREAD_NUM, MAX_TASK_SIZE);
+		//pHandle->pThreadPoll = threadpoll_create(2, MAX_THREAD_NUM, MAX_TASK_SIZE);
 		pHandle->fp = file_open(context->path, mode);
 		if (NULL == pHandle->fp)
 		{
@@ -857,10 +874,10 @@ int mfclose(MFILE *stream)
 		return -1;
 	}
 	struct mfile_session *pHandle = (struct mfile_session *)stream;
-	if (pHandle->op == 1)//write
-	{
-		auto_unzip(stream);
-	}
+	//if (pHandle->op == 1)//write
+	//{
+	//	auto_unzip(stream);
+	//}
 	pthread_mutex_lock(&pHandle->session_lock);
 	pHandle->is_open = 0;
 	pthread_mutex_unlock(&pHandle->session_lock);
