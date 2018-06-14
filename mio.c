@@ -33,7 +33,14 @@ int is_cancel()
 	pthread_mutex_unlock(&unzip_lock);
 	return is_cancel;
 }
-int mfile_cancel_unzip()
+int mfile_unzip_init()
+{
+	pthread_mutex_lock(&unzip_lock);
+	is_cancel_unzip = 0;
+	pthread_mutex_unlock(&unzip_lock);
+	return 0;
+}
+int mfile_unzip_stop()
 {
 	pthread_mutex_lock(&unzip_lock);
 	is_cancel_unzip = 1;
@@ -692,6 +699,10 @@ int mfile_unzip(const char *src_file, int64_t src_fileSize, const char *dest_pat
 	ret = 0;
 	for (i = 0; i < sfile_num; i++)
 	{
+		if (is_cancel())
+		{
+			ret = -1;
+		}
 		if (ret != 0)
 		{
 			break;

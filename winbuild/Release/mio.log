@@ -1,4 +1,4 @@
-﻿Build started 2018/6/14 13:34:04.
+﻿Build started 2018/6/14 14:21:26.
      1>Project "F:\cydex.data\mio\winbuild\mio.vcxproj" on node 2 (Rebuild target(s)).
      1>ClCompile:
          D:\Program Files\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /Ipthread\include /I..\ /I"D:\Program Files (x86)\Visual Leak Detector\include" /Zi /nologo /W3 /WX- /O2 /Oi /Oy- /GL /D WIN32 /D NDEBUG /D _WINDOWS /D _USRDLL /D MIO_EXPORTS /D WIN32_LEAN_AND_MEAN /D _WINDLL /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc120.pdb" /Gd /TC /analyze- /errorReport:prompt ..\file.c ..\mio.c ..\threadpoll.c ..\tlv.c
@@ -41,60 +41,60 @@
      1>..\file.c(563): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
          mio.c
      1>f:\cydex.data\mio\tlv.h : warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
-     1>..\mio.c(165): warning C4018: '<' : signed/unsigned mismatch
-     1>..\mio.c(182): warning C4018: '<' : signed/unsigned mismatch
-     1>..\mio.c(187): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+     1>..\mio.c(172): warning C4018: '<' : signed/unsigned mismatch
+     1>..\mio.c(189): warning C4018: '<' : signed/unsigned mismatch
+     1>..\mio.c(194): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
                  D:\Program Files\Microsoft Visual Studio 12.0\VC\include\string.h(195) : see declaration of 'strncpy'
-     1>..\mio.c(191): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+     1>..\mio.c(198): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
                  D:\Program Files\Microsoft Visual Studio 12.0\VC\include\string.h(195) : see declaration of 'strncpy'
-     1>..\mio.c(205): warning C4018: '<' : signed/unsigned mismatch
      1>..\mio.c(212): warning C4018: '<' : signed/unsigned mismatch
-     1>..\mio.c(214): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+     1>..\mio.c(219): warning C4018: '<' : signed/unsigned mismatch
+     1>..\mio.c(221): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
                  D:\Program Files\Microsoft Visual Studio 12.0\VC\include\string.h(195) : see declaration of 'strncpy'
-     1>..\mio.c(217): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+     1>..\mio.c(224): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
                  D:\Program Files\Microsoft Visual Studio 12.0\VC\include\string.h(195) : see declaration of 'strncpy'
-     1>..\mio.c(225): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+     1>..\mio.c(232): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
                  D:\Program Files\Microsoft Visual Studio 12.0\VC\include\string.h(195) : see declaration of 'strncpy'
-     1>..\mio.c(228): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+     1>..\mio.c(235): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
                  D:\Program Files\Microsoft Visual Studio 12.0\VC\include\string.h(195) : see declaration of 'strncpy'
-     1>..\mio.c(286): warning C4018: '<' : signed/unsigned mismatch
-     1>..\mio.c(340): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+     1>..\mio.c(293): warning C4018: '<' : signed/unsigned mismatch
+     1>..\mio.c(347): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
                  D:\Program Files\Microsoft Visual Studio 12.0\VC\include\string.h(195) : see declaration of 'strncpy'
-     1>..\mio.c(389): warning C4018: '<' : signed/unsigned mismatch
-     1>..\mio.c(400): warning C4018: '<' : signed/unsigned mismatch
-     1>..\mio.c(406): warning C4018: '<' : signed/unsigned mismatch
-     1>..\mio.c(418): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+     1>..\mio.c(396): warning C4018: '<' : signed/unsigned mismatch
+     1>..\mio.c(407): warning C4018: '<' : signed/unsigned mismatch
+     1>..\mio.c(413): warning C4018: '<' : signed/unsigned mismatch
+     1>..\mio.c(425): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
                  D:\Program Files\Microsoft Visual Studio 12.0\VC\include\stdio.h(356) : see declaration of 'sprintf'
-     1>..\mio.c(429): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+     1>..\mio.c(436): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
                  D:\Program Files\Microsoft Visual Studio 12.0\VC\include\string.h(195) : see declaration of 'strncpy'
-     1>..\mio.c(433): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+     1>..\mio.c(440): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
                  D:\Program Files\Microsoft Visual Studio 12.0\VC\include\string.h(195) : see declaration of 'strncpy'
-     1>..\mio.c(467): warning C4018: '<' : signed/unsigned mismatch
-     1>..\mio.c(503): warning C4018: '<' : signed/unsigned mismatch
-     1>..\mio.c(535): warning C4018: '<' : signed/unsigned mismatch
-     1>..\mio.c(596): warning C4018: '<' : signed/unsigned mismatch
-     1>..\mio.c(650): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+     1>..\mio.c(474): warning C4018: '<' : signed/unsigned mismatch
+     1>..\mio.c(510): warning C4018: '<' : signed/unsigned mismatch
+     1>..\mio.c(542): warning C4018: '<' : signed/unsigned mismatch
+     1>..\mio.c(603): warning C4018: '<' : signed/unsigned mismatch
+     1>..\mio.c(657): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
                  D:\Program Files\Microsoft Visual Studio 12.0\VC\include\string.h(195) : see declaration of 'strncpy'
-     1>..\mio.c(693): warning C4018: '<' : signed/unsigned mismatch
-     1>..\mio.c(705): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+     1>..\mio.c(700): warning C4018: '<' : signed/unsigned mismatch
+     1>..\mio.c(716): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
                  D:\Program Files\Microsoft Visual Studio 12.0\VC\include\stdio.h(356) : see declaration of 'sprintf'
-     1>..\mio.c(745): warning C4244: 'function' : conversion from 'int64_t' to 'size_t', possible loss of data
-     1>..\mio.c(750): warning C4018: '<=' : signed/unsigned mismatch
-     1>..\mio.c(752): warning C4244: 'function' : conversion from 'uint64_t' to 'size_t', possible loss of data
      1>..\mio.c(756): warning C4244: 'function' : conversion from 'int64_t' to 'size_t', possible loss of data
-     1>..\mio.c(773): warning C4018: '<=' : signed/unsigned mismatch
-     1>..\mio.c(816): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+     1>..\mio.c(761): warning C4018: '<=' : signed/unsigned mismatch
+     1>..\mio.c(763): warning C4244: 'function' : conversion from 'uint64_t' to 'size_t', possible loss of data
+     1>..\mio.c(767): warning C4244: 'function' : conversion from 'int64_t' to 'size_t', possible loss of data
+     1>..\mio.c(784): warning C4018: '<=' : signed/unsigned mismatch
+     1>..\mio.c(827): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
                  D:\Program Files\Microsoft Visual Studio 12.0\VC\include\string.h(195) : see declaration of 'strncpy'
-     1>..\mio.c(818): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+     1>..\mio.c(829): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
                  D:\Program Files\Microsoft Visual Studio 12.0\VC\include\string.h(195) : see declaration of 'strncpy'
-     1>..\mio.c(836): warning C4018: '<' : signed/unsigned mismatch
-     1>..\mio.c(838): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+     1>..\mio.c(847): warning C4018: '<' : signed/unsigned mismatch
+     1>..\mio.c(849): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
                  D:\Program Files\Microsoft Visual Studio 12.0\VC\include\string.h(195) : see declaration of 'strncpy'
-     1>..\mio.c(840): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+     1>..\mio.c(851): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
                  D:\Program Files\Microsoft Visual Studio 12.0\VC\include\string.h(195) : see declaration of 'strncpy'
-     1>..\mio.c(941): warning C4018: '<' : signed/unsigned mismatch
-     1>..\mio.c(1044): warning C4018: '<' : signed/unsigned mismatch
-     1>..\mio.c(1071): warning C4018: '<' : signed/unsigned mismatch
+     1>..\mio.c(952): warning C4018: '<' : signed/unsigned mismatch
+     1>..\mio.c(1055): warning C4018: '<' : signed/unsigned mismatch
+     1>..\mio.c(1082): warning C4018: '<' : signed/unsigned mismatch
          threadpoll.c
          tlv.c
      1>f:\cydex.data\mio\tlv.h : warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
@@ -111,4 +111,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:00.77
+Time Elapsed 00:00:00.70
